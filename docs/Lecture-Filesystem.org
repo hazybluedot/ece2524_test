@@ -16,6 +16,36 @@
 #+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
 
 
+* Announcements
+** Annoucements
+*** Twitter hashtags: what inspired them?
+*** Get in the channel!
+*** Copy your key!
+** Push your repo
+*** if you haven't already					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ scp ~/.ssh/id_rsa.pub \
+    [cvlusername]@ece2524.ece.vt.edu:/dropbox/$(whoami).pub
+    #+end_example
+
+*** git remote							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+$ cd what_is_unix
+$ git remote add origin \
+ece2524git@ece2524.ece.vt.edu:\
+assignments/[yourgituser]/whatisunix.git
+$ git push origin master
+#+end_example
+
+Replace =[yourgituser]= with the base name (everything before the
+=.pub=) of the key you uploaded. It /is/ case sensitive.
+ 
 * Unifying Ideas
 ** Motivating Quotes
 *** quote 							    :B_quote:
@@ -106,22 +136,27 @@ $ chmod o+rw myfile # add read/write for others
 $ chmod o-w myfile  # remove write for others
 #+end_src
 
-** What is meant by "everything"?
+** "everything"?
 *** examples							  :B_example:
     :PROPERTIES:
     :BEAMER_env: example
     :END:
 #+begin_example
 $ cat /proc/cpuinfo
-$ watch -n .5 cat /sys/class/backlight/gmux_backlight/actual_brightness
+$ watch -n .5 cat \
+ /sys/class/backlight/gmux_backlight/actual_brightness
 $ cat /sys/class/backlight/gmux_backlight/max_brightness
 #+end_example
 
-#+begin_note
-cat /sys/class/backlight/gmux_backlight/max_brightness | sudo tee /sys/class/backlight/gmux_backlight/brightness
-#+end_note
+#+begin_example
+$ cat /sys/class/backlight/gmux_backlight/max_brightness \
+ | sudo tee /sys/class/backlight/gmux_backlight/brightness
+#+end_example
 
-** What is a process?
+(actual path to LCD brightness may be different on your hardware.)
+
+* Data Streams
+** What's doing the reading/writing?
 *** If a file is anything data can be written to or anything from which data can be read... What is doing the reading and writing?
 #+BEGIN_LaTeX
 \tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
@@ -231,7 +266,7 @@ $ ./mult < numbers > product
 *** What is a file descriptor?
 
 ** File Descriptors
-*** busy_reader							  :B_example:
+*** busy\_reader 						  :B_example:
     :PROPERTIES:
     :BEAMER_env: example
     :END:
@@ -239,4 +274,28 @@ $ ./mult < numbers > product
     $ git clone ece2524git@ece2524.ece.vt.edu:ece2524.git
     $ cd ece2524/examples
     $ ./busy_reader.sh
+    #+end_example
+*** in another pane						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ ls -l /proc/$(pgrep busy_reader.sh)/fd
+    #+end_example
+
+* Pipelines
+** Pipelines (finally)
+*** busy\_reader pipeline					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ ./number_gen.sh 5 | ./busy_reader.sh | ./line_reader.sh
+    #+end_example
+*** in another pane						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ ./fd_viewer.sh busy_reader.sh line_counter.sh number_gen.sh
     #+end_example
