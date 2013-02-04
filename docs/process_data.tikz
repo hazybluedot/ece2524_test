@@ -1,0 +1,14 @@
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {process};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+	\node [fd] (c) [right of=a] {/dev/tty};
+	\node [fd] (b) [left of=a] {/dev/tty};
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
