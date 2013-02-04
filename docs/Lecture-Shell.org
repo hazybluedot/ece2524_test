@@ -1,0 +1,170 @@
+#+TITLE: The Unix Shell
+#+AUTHOR: Darren Maczka
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Overview
+** Main Topics
+*** The Unix Shell
+ - What Is It?
+ - Why is the philosophy behind it?
+ - Why are there different versions?
+ - How is it used effectively?
+
+** Layers in Unix
+  [[/home/dmaczka/ECE2524/doc/figures/unix_layers.pdf]]
+** There are many
+   - the Bourne shell
+     + sh
+   - the "Bourne again" shell
+     + bash
+   - the Korn shell
+     + ksh
+   - the C shell
+     + csh
+   - the Z shell
+     + zsh
+
+   + ... Why?
+** What does the Shell do?   
+*** Prompt user for input from keyboard
+*** interprets your commands
+*** gives you feedback
+*** run commands from a text file (shell script)
+* Commands
+** Command Structure
+   :PROPERTIES:
+   :BEAMER_envargs: [t]
+   :END:
+*** Bash Terminal 
+    :PROPERTIES:
+    :BEAMER_col: 0.75
+    :BEAMER_env: block
+    :END:
+#+name: commandexample
+#+begin_src bash :results output :exports both
+$ command [options] [files] # comment
+#+end_src
+*** the =[..]= means "optional"
+*** Examples 
+#+begin_src shell
+  ls
+  ls -l
+  ls -l myfile
+  ls -l myfile myfile1
+  ls -l -d myfile
+  ls -ld myfile  
+#+end_src 
+** Notation
+In the documentation you will find examples like this:
+#+begin_src bash
+$ bc -q
+3+5<ENTER>
+8
+^D
+$
+#+end_src
+*** =$= indicates the command prompt
+
+*** =<...>= on input lines means press the named key
+*** =^D= means "Ctrl+d", you will also see =^C, ^X, ^Z=
+** Common Shell Commands
+*** Getting oriented
+   - date,whoami,pwd,hostname
+*** File manipulation
+   - ls, cp, mv, rm
+*** Viewing contents of files
+    - cat, more, head, tail
+*** Getting help
+    - man, info
+
+* File system
+** The Unix Filesystem
+*** A file is...
+**** "a bag of byes"
+****  anything from which data can be taken, or to which data can be sent: "everything is a file"
+*** Several types of files
+- Regular file
+- Directory
+- Symbolic link
+- Device special file
+- Named pipe
+** Directories
+*** Unix was the first OS to use a tree data structure to store information about files.
+*** Everything is stored relative to the root ( / ) node
+*** Actual contents of directories may reside on local or remote machines
+*** Common directories on a GNU/Linux system
+#+begin_src shell
+/
+/usr
+/home
+/home/dmaczka
+/etc
+#+end_src
+*** these are absolute path names
+
+** Directories
+*** short cuts
+#+begin_src shell
+.  # current directory
+.. # parent directory
+~  # user's home directory
+#+end_src
+*** examples
+#+begin_src shell
+cd /home/dmaczka/ECE2524/doc
+ls
+ls ..
+ls ~/ECE2524
+#+end_src
+* Use it Well
+** Remote Access
+*** 
+#+begin_src shell
+ssh [options] [user@]hostname [command]
+#+end_src
+*** 
+#+begin_src shell
+scp [options] [[user@]host1:]file1 [[user@]host2:]file2
+#+end_src
+*** 
+#+begin_src shell
+rsync [options] [user@]host:SRC... [DEST]
+#+end_src
+** Command history
+*** history
+*** up/down
+*** !*
+*** !!
+** Tab completion
+*** auto complete commands and file names
+*** install =bash-completion= for even more awesomeness
+** Terminal Multiplexers
+#+begin_quote
+Apart from the ability to suspend processes (in itself a trivial addition to the scheduler which could be made fairly inoffensive) what job control is about is switching a terminal among multiple processes. Unfortunately, it does the easiest part — deciding where keystrokes go — and punts all the hard parts, like saving and restoring the state of the screen, to the application. - Eric S. Raymond
+#+end_quote
+*** screen
+*** tmux
+* Wrap up
+** Logging out
+   #+begin_src bash
+   $ exit
+   #+end_src
+   or
+   #+begin_src bash
+   $ ^D
+   #+end_src
+   
+** Parting Quote
+  #+begin_quote
+  Unix is simple and coherent, but it takes a genius (or at any rate,
+  a programmer) to understand and appreciate its simplicity.
+- Dennis Ritchie
+  #+end_quote

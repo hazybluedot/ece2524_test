@@ -1,0 +1,242 @@
+#+TITLE: The Filesystem
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+
+* Unifying Ideas
+** Motivating Quotes
+*** quote 							    :B_quote:
+    :PROPERTIES:
+    :BEAMER_env: quote
+    :END:
+#+Begin_quote
+This is the Unix philosophy: Write programs that do one thing and do
+it well. Write programs to work together. Write programs to handle
+text streams, because that is a universal interface. -Doug McIlroy
+#+end_quote
+*** quote							    :B_quote:
+    :PROPERTIES:
+    :BEAMER_env: quote
+    :END:
+#+begin_quote
+Unix has a couple of unifying ideas or metaphors that shape its APIs
+and the development style that proceeds from them. The most important
+of these are probably the “everything is a file” model and the pipe
+metaphor built on top of it. - Eric S. Raymond
+#+end_quote
+    
+* Everything is a file
+** What is a File?
+- recall: A file is 
+  - anything that to which data can be written and from which data can be read
+  - a "bag of bytes"
+- a file has permissions and ownership associated with it
+*** output of ls -l 						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_src bash
+$ ls -l /etc/passwd
+-rw-r--r-- 1 root root 1920 Jan 28 10:03 /etc/passwd
+#^^^^^^^^^   ^^^^ ^^^^
+#   mode     user group
+#+end_src
+** File permissions
+*** mode bits							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+#+begin_src bash
+--- => 0
+--x => 1
+-w- => 2
+-wx => 3
+...
+rwx => 7
+#+end_src
+*** mode of /etc/passwd 					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_src bash
+-rw-r--r-- => 644
+#+end_src
+
+** File permission
+*** dropbox							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_src bash
+$ ssh ece2524.ece.vt.edu ls -ld /dropbox
+drwx-wx-wx 2 ece2524 ece2524 4096 Feb  3 10:57 /dropbox
+$ ssh ece2524.ece.vt.edu ls -l /dropbox
+ls: cannot open directory /dropbox: Permission denied
+#+end_src
+
+** File Permissions
+*** Relevant Commands
+- =chmod=
+- =chown=
+*** chmod							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_src bash
+$ echo "hello world" > myfile
+$ chmod 400 myfile
+$ ls -l myfile
+$ echo "goodbye world" >> myfile # permission denied
+$ chmod 600 myfile
+$ echo "goodbye world" >> myfile # this works
+$ chmod o+rw myfile # add read/write for others
+$ chmod o-w myfile  # remove write for others
+#+end_src
+
+** What is meant by "everything"?
+*** examples							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+$ cat /proc/cpuinfo
+$ watch -n .5 cat /sys/class/backlight/gmux_backlight/actual_brightness
+$ cat /sys/class/backlight/gmux_backlight/max_brightness
+#+end_example
+
+#+begin_note
+cat /sys/class/backlight/gmux_backlight/max_brightness | sudo tee /sys/class/backlight/gmux_backlight/brightness
+#+end_note
+
+** What is a process?
+*** If a file is anything data can be written to or anything from which data can be read... What is doing the reading and writing?
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=2.5cm,auto,>=latex']
+    \node [proc] (a) {process};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+*** What is a process?
+  (and how does it differ from a thread?)
+
+** The Standard Streams
+
+#+begin_example
+$ ./mult
+#+end_example
+
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (c) [right of=a] {/dev/tty};
+    \node [fd] (b) [left of=a] {/dev/tty};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+#+begin_example
+$ ./mult > product
+#+end_example
+
+#+BEGIN_LaTeX
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (b) [left of=a] {/dev/tty};
+    \node [fd] (c) [right of=a] {product};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+#+begin_example
+$ ./mult < numbers > product
+#+end_example
+
+#+BEGIN_LaTeX
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (b) [left of=a] {numbers};
+    \node [fd] (c) [right of=a] {product};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+** Magic?
+*** How does the process know where to read or write data?
+    It doesn't! And that's a good thing.
+*** open(2), read(2), write(2) 					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ man 2 open
+    $ man 2 read
+    $ man 2 write
+    #+end_example
+*** What is a file descriptor?
+
+** File Descriptors
+*** busy_reader							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+    #+begin_example
+    $ git clone ece2524git@ece2524.ece.vt.edu:ece2524.git
+    $ cd ece2524/examples
+    $ ./busy_reader.sh
+    #+end_example

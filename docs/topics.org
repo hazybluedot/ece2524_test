@@ -1,0 +1,36 @@
+* 1 Introduction
+* 2 The Shell
+** Assignment due: "What is Unix?"
+* 3 Unifying Philosophy
+** What is a file?
+   A file is anything data can be written to or read from.  
+** Everything is a File
+** What is a Process?
+What is doing the reading and writing?
+A process. What is a process?
+*** Examples
+** Pipelines
+** Assignment due: Mult - part 1
+   read list of characters on standard in, parse as integers
+   multiply integers, write product to standard out
+* 4 The Love of Text
+** Why text?
+** What do we mean by 'text'?
+** The War of the Editors: Emacs vs. vi
+** Assignment due: Mult - part 2
+   add error checking to mult.  Ignore non-integer values but print warning to standard error.
+* 5 Text filtering (sed/grep/regex)
+** Assignment due: Mult - part 3
+   add command line argument checking (--verbose, --ignore-nan)
+* 6 Text filtering part 2 (awk, but not awk)
+** Assignment due: Inventory - part 1
+   parse text fields into a data structure
+* 7 Midterm review
+* 8 
+** Assignment due: Iventory - part 2
+   parse commands into a data structure
+
+* 9 
+
+* Next semester
+** early topic on asking questions
