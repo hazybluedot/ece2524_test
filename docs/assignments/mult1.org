@@ -1,0 +1,338 @@
+* Homework 2
+
+/Due:/ February 6 at 9:05am
+
+* Setup
+
+We are going to start using a program called =git= to store and track
+changes to our work. First, you will need to install it with your
+package manager (=apt-get= on Debian based distros, like Ubuntu). Once
+it is installed
+
+#+BEGIN_EXAMPLE
+    $ git config --global user.name "John Doe"
+    $ git config --global user.email johndoe@example.com
+#+END_EXAMPLE
+
+Of course, replace ="John Doe"= and =jondoe@example.com= with your name
+and email, respectively. It is important that you use a valid email
+address here: this will be how feedback and suggestions for your
+programming assignments find their way back to you!
+
+There is a
+[[http://git-scm.com/book/en/Getting-Started-First-Time-Git-Setup][Getting
+Started]] guide on the =git= website, the important section for now is
+"Your Identity" which we just completed with the previous two commands.
+
+* Create an SSH Key
+
+For this and subsequent assignments you will be submitting your
+assignments via =git= to a remote machine (ece2524.ece.vt.edu). We will
+use [[https://wiki.archlinux.org/index.php/SSH_Keys][SSH Keys]] to
+control access. To start, you will need to create a key pair:
+
+Assume I have a file named =reader.sh= containing the following lines:
+
+#+BEGIN_EXAMPLE
+    $ ssh-keygen -b 4096 -t rsa
+    Generating public/private rsa key pair.<ENTER>
+    Enter file in which to save the key (/home/username/.ssh/id_rsa)<ENTER>
+    Created directory '/home/username/.ssh'.
+    Enter passphrase (empty for no passphrase): [optional password]<ENTER>
+    Enter same passphrase again: [optional password]<ENTER>
+    The key fingerprint is
+    ....
+    The key's randomart image is:
+    ...
+    ...
+    ...
+    $
+#+END_EXAMPLE
+
+Once installed on a remote machine, this key will grant you access to
+that machine. Without a password, if someone is able to hack into your
+machine and access your key, they will immediately have access to any
+remote machines that use that key. A password on your key would provide
+a additional layer of security a hacker would have to break before
+gaining access to any remote machines authenticated by your key. For the
+purposes of this class, the extra security isn't too much of a concern,
+but if you plan to use this key pair to access other machines you may
+want to consider it (and you might also want to change the comment
+message after the =-C= option to something less specific!).
+
+* Copy your public key to the server
+
+After running this command two files will be created in =~/.ssh=: your
+private key =id_rsa= and your public key =id_rsa.pub=. The security of
+this authentication method depends on the assumption that /you/ are the
+/only/ person who has access to your private key (=id_rsa=). Never share
+this file with anyone, or copy it to a remote machine. The public key
+(=id_rsa.pub=) is shared with remote machines you have access to. Copy
+your /public/ key to the dropbox I have set up on the class server:
+
+#+BEGIN_EXAMPLE
+    $ scp ~/.ssh/id_rsa.pub [cvl_user]@ece2524.ece.vt.edu:/dropbox/$(whoami).pub
+#+END_EXAMPLE
+
+Replace =[cvl_user]= with your CVL account name. This command will use
+your login name (the output of =whoami=) as the name of the key at the
+destination, otherwise everyone would be writing to =id_rsa.pub=! You
+may use a different username if you wish, it will determine the path
+name to your repository you access later, so remember what you use,
+especially if it is different from your login or cvl account name.
+
+*Note*, copying the files to the dropbox will not automatically grant
+you access to the git server you will use to submit your assignment, I
+will have to install the keys myself.
+
+* Introduction
+
+When a process starts up on a Unix machine the kernel assigns three
+default input/output streams to it. These are:
+
+-  standard input (input: defaults to the keyboard)
+-  standard output (output: defaults to the terminal screen)
+-  standard error (output: defaults to the terminal screen)
+
+In this assignment we will implement a simple filter program that reads
+data from /standard input/ and writes data to /standard output/. Reading
+from /standard input/ and writing to /standard output/ is straight
+forward in C++, Python and Bash. The following examples demonstrate a
+program in each language that reads lines of input from /standard input/
+and writes the same line back to /standard output/.
+
+** Reminder about notation
+
+In the usage examples =<ENTER>= indicates that the user presses the
+Enter key after a line of input and =^D= indicates the user presses
+=Ctrl+d= which indicates End of File (EOF). You won't see either of
+these strings printed to your screen.
+
+** Reading lines
+
+The following examples show how to read lines of text from /standard
+input/ and write the line back out to /standard output/. You do not need
+to actually create the files and run them unless you want to for
+practice. If you fully understand what each one does feel free to skip
+ahead to [[#initialize-a-new-repository][Initialize a new repository]].
+
+-  in bash.
+
+   Create a file named =reader.sh= containing the following lines:
+
+   #+BEGIN_EXAMPLE
+       while read line; do
+           echo "$line"
+       done
+   #+END_EXAMPLE
+
+   Now run the script you just wrote with =bash=
+
+   #+BEGIN_EXAMPLE
+       $ bash reader.sh
+       hello<ENTER>
+       hello
+       world<ENTER>
+       world
+       ^D
+       $
+   #+END_EXAMPLE
+
+-  in C++
+
+   Create a file named 'reader.cc' containing the following lines:
+
+   #+BEGIN_EXAMPLE
+       #include <iostream>
+
+       using namespace std;
+
+       int main() {
+           string line;
+           while(getline(cin, line)) {
+               cout << line << endl;
+           }
+       }
+   #+END_EXAMPLE
+
+   If you installed =build-essentials= you should be able to compile
+   =reader.cc= and run the subsequent binary with the following
+   commands:
+
+   #+BEGIN_EXAMPLE
+       $ g++ -o reader reader.cc
+       $ ./reader
+       hello<ENTER>
+       hello
+       world<ENTER>
+       world
+       ^D
+       $
+   #+END_EXAMPLE
+
+-  in Python
+
+   Create a file named 'reader.py' containing the following lines:
+
+   #+BEGIN_SRC python
+       import sys
+
+       for line in sys.stdin:
+           sys.stdout.write(line)
+   #+END_SRC
+
+   Now run the source using the python interpreter:
+
+   #+BEGIN_EXAMPLE
+       $ python2 reader.py
+       hello<ENTER>
+       world<ENTER>
+       ^D^D
+       hello
+       world
+       $
+   #+END_EXAMPLE
+
+   Note the difference in how lines are buffered and the need to press
+   =^D= twice to terminate the loop in the Python example compared to
+   the C++ and bash examples. For the purposes of this class the
+   differences in behavior are fine, I will always test programs with a
+   file redirected to standard input and will only look at final output
+   for correctness. If you do need to get behavior similar to bash and
+   C++ in python, the following change will do the trick:
+
+   #+BEGIN_SRC python
+       for line in iter(sys.stdin.readline, ''):
+           sys.stdout.write(line)
+   #+END_SRC
+
+#+BEGIN_HTML
+  <!--
+  ## Theory 
+  In functional programming, "fold", sometimes called "reduce"
+  or "accumulate", is an operation that iteratively combines the
+  elements in an input list to produce a single value as an output.  And
+  example would be to take a list of numbers and return their sum.
+  -->
+
+#+END_HTML
+
+* Initialize a new repository
+
+Create an empty git repository that is associated with the remote
+machine (this will only work after I have installed your key file):
+
+#+BEGIN_EXAMPLE
+    $ git clone ece2524git@ece2524.ece.vt.edu:assignments/[git_username]/mult
+    $ cd mult
+#+END_EXAMPLE
+
+Replace =[git_username]= with the name you called your keyfile that you
+copied to the server. If you used the command I supplied verbatim then
+it should be the same as your local login name. Place all of the source
+files for this assignment in the directory that was created with the
+=git clone= command.
+
+* Assignment
+** Overview
+
+The final product of this assignment will be three source files:
+=mult.sh=, =mult.py= and =mult.cc= (please double check that you name
+them correctly, it makes it easier for me!), submitted with =git=. Each
+source file will implement the same program, described below, in a
+different language: bash, Python and C++, respectively.
+
+** Research
+
+Learn how to convert a string to an integer and multiply integers
+together in C++, Python and bash.
+
+** Program 1
+
+After this assignment you will have created three separate files, each
+containing source code that implement a program that reads in a list of
+numbers on standard input. Upon list termination (=EOF=) the program
+should print the product of all numbers to standard output.
+
+#+BEGIN_EXAMPLE
+    $ cat numbers
+    2
+    3
+    4
+    $ program1 < numbers
+    24
+    $
+#+END_EXAMPLE
+
+/The program should not require any input except for the values to be
+multiplied./ /The program should not output anything except the product/
+/You may assume that only valid integers in the input, i.e. no error
+checking is required/
+
+/Note:/ This type of data processing pattern is sometimes referred to as
+a /sponge/
+([[http://catb.org/esr/writings/taoup/html/ch11s06.html#id2958116][Raymond,
+pp 269]]), since it must read in all its input before producing any
+output.
+
+1. Write a Python script called =mult.py= that implements /Program 1/,
+   reading from /standard input/ and writing to /standard out/.
+
+   #+BEGIN_EXAMPLE
+       $ python2 mult.py
+       2<ENTER>
+       -3<ENTER>
+       ^D^D
+       -6
+       $ python2 mult.py < numbers
+       24
+       $
+   #+END_EXAMPLE
+
+2. Write a bash script called =mult.sh= that implements /Program 1/
+
+   #+BEGIN_EXAMPLE
+       $ bash mult.sh
+       2<ENTER>
+       -3<ENTER>
+       ^D
+       -6
+       $ bash mult.sh < numbers
+       24
+       $
+   #+END_EXAMPLE
+
+3. Write a C++ program with source file named =mult.cc= that implements
+   /Program 1/, it should compile with =g++=
+
+   #+BEGIN_EXAMPLE
+       $ g++ -o mult mult.cc
+       $ ./mult
+       2<ENTER>
+       -3<ENTER>
+       ^D
+       -6
+       $
+   #+END_EXAMPLE
+
+* Grading and Submission
+
+In addition to proper functionality described by the assignment I will
+be looking for:
+
+-  proper use of /standard in/ and /standard out/ (described in the
+   assignment, but it's worth repeating)
+-  readable code
+-  elegant solutions
+
+Make sure you have added and committed your final changes to your
+repository (=git status= should report a clean working directory). Then
+run the following command:
+
+#+BEGIN_EXAMPLE
+    $ git push origin master
+#+END_EXAMPLE
+
+If the command executes without any errors you should be done. I am
+working on a confirmation email system, it is currently not implemented
+though. I will update this write-up when it is.
