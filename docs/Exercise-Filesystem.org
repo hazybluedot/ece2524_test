@@ -7,6 +7,28 @@
 
 
 * Introduction
+During last week's Exercises, you gained some experience with several
+common Unix shell commands. Here is a partial list of commands that
+should look familiar by now:
+
+| alias | date | hostname | mv | whoami |
+| cat   | echo | ls       | rm |        |
+| cp    | exit | man      |    |        |
+
+Take a minute to look over this list. If you cannot remember what any of
+these commands does, at least in its simplest form, then you should stop
+and review earlier course material before proceeding.
+
+Last week I also described output redirection using >, as well as
+command-line arguments. A special type of command-line argument is
+called a "switch," and these are commonly used to specify options to
+commands. Some examples that we looked at are =-a= and =-l= for the =ls=
+command.
+
+As a reminder, it is okay to get help from another student or a teaching
+assistant or the instructor if you get stuck while going through today's
+Exercises.
+
 * Unix directories
 
 It is time to do some work with directories in Unix. If you haven't

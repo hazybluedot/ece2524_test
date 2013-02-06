@@ -1,0 +1,182 @@
+#+TITLE: The Filesystem
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+
+* Announcements
+** Annoucements
+*** Common problems with git
+*** http://linxb.in
+* Recap
+** Process
+- Combination of program code and state information.
+** File Descriptors
+- Integer values
+- Low level mechanism that provide a process a means to read and write from files
+- New processes have /standard in/ (=fd/0=), /standard out/ (=fd/1=) and /standard error/ (=fd/2=)
+- Everything is a file!
+** File Descriptors
+*** no redirection
+#+begin_example
+$ ./mult
+#+end_example
+
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (c) [right of=a] {/dev/tty};
+    \node [fd] (b) [left of=a] {/dev/tty};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+** File Descriptors
+*** output redirection
+#+begin_example
+$ ./mult > product
+#+end_example
+
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (b) [left of=a] {/dev/tty};
+    \node [fd] (c) [right of=a] {product};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+** File Descriptors
+*** input and output redirection
+#+begin_example
+$ ./mult < numbers > product
+#+end_example
+
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [fd] (b) [left of=a] {numbers};
+    \node [fd] (c) [right of=a] {product};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+** Pipes
+- a form of inter-process communication (IPC)
+- connects the /standard out/ of one process to the /standard in/ of another
+- can connect an arbitrary number of processes together in this fashion
+** Pipes
+*** output to input
+#+begin_example
+$ ./number_gen.sh 5 | ./mult > product
+#+end_example
+
+#+BEGIN_LaTeX
+\tikzstyle{proc}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{fd}=[draw, fill=green!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+\begin{figure}
+\begin{tikzpicture}[node distance=3.5cm,auto,>=latex']
+    \node [proc] (a) {mult};
+    \node (b) [left of=a,node distance=3cm, coordinate] {};
+    \node (c) [right of=b, node distance=6cm]{};
+    \node [proc] (b) [left of=a] {number\_gen.sh};
+    \node [fd] (c) [right of=a] {product};
+
+    \path[->] (b) edge node {standard} (a);
+    \path[->] (b) [below] edge node {in} (a);
+    \path[->] (a) edge node {standard} (c);
+    \path[->] (a) [below] edge node {out} (c);
+\end{tikzpicture}
+\end{figure}
+#+END_LaTeX
+
+** Summary
+*** *nix provides
+- cheap process creation
+- easy inter-process communication (IPC)
+*** Unix philosophy
+#+Begin_quote
+This is the Unix philosophy: Write programs that do one thing and do
+it well. Write programs to work together. Write programs to handle
+text streams, because that is a universal interface. -Doug McIlroy
+#+end_quote
+*** What would King Leonidas say?
+** Summary
+[[./assets/this_is_unix.png]]
+* Terminology
+** Types of interfaces (Raymond, Ch. 11)
+- cantrip
+- filter
+- source
+- sink
+* Exercise
+** Learn
+- Study the commands given.  Each are designed to manipulate date on /standard in/, /standard out/ or both.
+| sort | past | echo  | 
+| uniq | grep | cut   |
+| cat  | exit | wc    |
+| bc   | test | uname |
+- think about which of the previously mentioned interfaces each command best fits with.
+   
+** Make
+- a bash script named =cpu_count= which prints the number of cpus on the current machine.
+- a /cantrip/ style script named =islinux= that returns exit status 
+  - 0 if the name of the current running kernel is "Linux"
+  - 1 otherwise 
+** Submit
+- One repo per group
+- In a file named =AUTHORS= list the PID and git user id of each person in the group
+  - one identity per line
+  - no other information
+- Add and commit your script(s) and =AUTHORS= to a new git repository
+- Add a remote origin ece2524git@ece2524.ece.vt.edu:inclass/username/week3
+- Push your repo to the server
