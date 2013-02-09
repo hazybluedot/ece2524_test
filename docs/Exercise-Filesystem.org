@@ -133,7 +133,7 @@ $ ls -a
 $
 #+END_EXAMPLE
 
-As you might expect, a newly created directory is empty. With =ls =, you
+As you might expect, a newly created directory is empty. With =ls -a=, you
 see that the only hidden files in this new directory are =.= and =..=,
 which represent the current and parent directories, respectively. These
 symbols appear in every Unix directory, even "empty" ones. Now create a
@@ -207,20 +207,9 @@ both =rm= and =*=.
 There is another way to remove directories: with the command =rm -r=. The
 =-r= switch stands for recursive. In addition to removing files, this
 command will remove directories even if they are not empty. Yes, if you
-type =rm  directory-name=, then that directory and all files and all
-subdirectories below it are removed. So if you ever use =rm =, be very
+type =rm -r directory-name=, then that directory and all files and all
+subdirectories below it are removed. So if you ever use =rm -r=, be very
 careful with it.
-
-#+BEGIN_SIDEBAR
-The GNU version of =rm= allows options to come after the file name.
-When I want to completely delete a directory I will use
-
-: rm directory-name -r
-
-By waiting until the end of the command to type =-r= I reduce the
-chances of accidently hitting ENTER before finishing typing the full
-path.
-#+END_SIDEBAR
 
 * Changing file permissions
 
@@ -376,7 +365,7 @@ to the current directory. You can do this with the following command:
 $ PATH=$PATH:.
 #+END_EXAMPLE
 
-Now if you type =echo $PATH= you should see ``=.='' given as the last
+Now if you type =echo $PATH= you should see "=.=" given as the last
 directory. Then if you type =mydate= it should work as if it were a
 standard shell command.
 
