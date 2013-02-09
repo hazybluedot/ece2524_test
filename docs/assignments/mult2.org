@@ -1,0 +1,130 @@
+#+TITLE Homework 3
+
+/Due:/ February 13 at 9:05am
+
+* Setup
+In this assignment you will add some modifications to the source files
+you submitted for [[../mult-part-1/][Mult - Part 1]].  If you didn't fully complete or
+understand that assignment be sure to review the solutions and ask
+your classmates or me for clarification.
+
+* Introduction
+
+Recall that when a process starts up on a Unix machine the kernel assigns three
+default input/output streams to it. These are:
+
+-  /standard input/ (input: defaults to the keyboard)
+-  /standard output/ (output: defaults to the terminal screen)
+-  /standard error/ (output: defaults to the terminal screen)
+
+In the first part of this assignment you created three programs:
+=mult.sh=, =mult.py= and =mult.cc= that read data from /standard in/
+and wrote data to /standard out/.  We will expand on that to also
+write to /standard error/.
+
+* Assignment
+** Overview
+
+The final product of this assignment will be three source files:
+=mult.sh=, =mult.py= and =mult.cc= in the base directory of your git
+repo. The base directory is the directory that contains the =.git=
+directory. Double check that your source files are in the base
+directory of your repo (most were) and use =git mv= to move files into
+the base directory if they were not already.  If you had to move files
+around, commit those changes now with a =git commit=, before going on
+to the next step in the assignment.
+
+** Research
+
+Each language has its own philosophy for dealing with error
+conditions.  Some use return codes, others use exceptions. Still
+others expect pieces of the program to crash and handle the
+crashes. Sometimes the language may be built in such a way to
+encourage certain types of error handling, other times there may be no
+constraints on the programer.  Learn about the error handling
+techniques you have available to you in C++, Python and bash.  Try to
+determin if each language has a preferred method of handling errors.
+
+For each of Python, C++ and bash:
+  - learn how to check for an error when trying to convert a string to an integer
+  - learn how to write data to /standard error/ (file descriptor 2)
+
+** Add Error Checking and Reporting
+Add basic error checking to =mult.sh=, =mult.py= and =mult.cc=.  Each
+program should check that each line read in is really an integer
+value.  If a line is read that can **not** be converted to an integer, the program should write a message to /standard error/ that says
+
+#+begin_example
+warning: can not convert to an integer: [line]
+#+end_example
+
+where =[line]= is replaced with the actual line that cause the trouble.  The the program should continue reading the next line.  The final product should be the product of all valid integers that were entered.  For example
+
+#+begin_example
+$ ./mult
+3<ENTER>
+2<ENTER>
+five<ENTER>
+warning: can not convert to an integer: five
+-1<ENTER>
+^D
+-6
+$
+#+end_example
+
+And as before, you should still be able to redirect a file to the /standard input/ of your program:
+
+#+begin_example
+$ cat numbers
+3
+2
+five
+-1
+$ ./mult < numbers
+warning: can not convert to an integer: five
+1
+$
+#+end_example
+
+And becuase the output is still written to /standard out/ and the
+warning is written to /standard error/, you should be able to redirect
+one or the other or both to files:
+
+#+begin_example
+$ ./mult < numbers > mult.out
+warning: can not convert to an integer: five
+$ cat mult.out
+1
+$ ./mult < numbers 2> mult.error
+1
+$ cat mult.error
+warning: can not convert to an integer: five
+$
+#+end_example
+
+* Grading and Submission
+
+In addition to proper functionality described by the assignment I will
+be looking for:
+
+- proper use of /standard in/, /standard out/ and /standard error/
+- demonstrate understanding of error handeling philosophy for each language
+- readable code
+- elegant solutions
+
+- Make sure you have added and committed your final changes to your
+repository (=git status= should report a clean working directory).  
+
+- =git log= should report at least one additional commit compared to
+what you submitted for part 1, more commits are ok of course, if
+
+Once you have added and committed all your changes, run the following
+command from your working directory:
+
+#+BEGIN_EXAMPLE
+    $ git push
+#+END_EXAMPLE
+
+If the command executes without any errors you should be done. I am
+working on a confirmation email system, it is currently not implemented
+though. I will update this write-up when it is.
