@@ -1,14 +1,19 @@
-#~/bin/sh
+#~/bin/bash
 
 # cd $GITOLITE_ADMIN_DIR
 
-BASENAME="assignments/CREATOR/mult"
+if [ -z "$1" ]; then
+    echo "Usage: $(basename $0) PATH" >&2
+    exit 1
+else
+    BASENAME="$1"
+fi
 
 while read GITNAME; do
     REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
     REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
 
-    push $(realpath ".")
+    pushd $(realpath ".")
     if [ -d "$REPO_DIR" ]; then
 	cd $REPO_DIR
 	git pull
@@ -18,5 +23,5 @@ while read GITNAME; do
 	    echo "error: $REPO_DIR" >&2
 	fi
     fi
-    cd $(pop)
+    popd
 done
