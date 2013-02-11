@@ -1,0 +1,19 @@
+#~/bin/sh
+
+if [ -z "$1" ]; then
+   if [ -z "$GITOLITE_ADMIN_DIR" ]; then
+       GITOLITE_ADMIN_DIR="."
+   fi;
+else
+    GITOLITE_ADMIN_DIR="$1"
+fi
+
+if [ ! -f "$GITOLITE_ADMIN_DIR/conf/gitolite.conf" -o ! -d "$GITOLITE_ADMIN_DIR/keydir" ]; then
+    echo "$GITOLITE_ADMIN_DIR: not a valid gitolite admin directory." >&2
+    exit 1
+fi
+
+for f in $( ls $GITOLITE_ADMIN_DIR/keydir/*.pub | sed -re 's/[^\/]*\/([^@\.]*)[@\.].*/\1/g' | uniq );
+do
+    basename $f
+done

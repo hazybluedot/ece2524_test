@@ -1,0 +1,22 @@
+#~/bin/sh
+
+# cd $GITOLITE_ADMIN_DIR
+
+BASENAME="assignments/CREATOR/mult"
+
+while read GITNAME; do
+    REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
+    REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
+
+    push $(realpath ".")
+    if [ -d "$REPO_DIR" ]; then
+	cd $REPO_DIR
+	git pull
+    else
+	git clone "$REPO_PATH" $REPO_DIR
+	if [ $? -ne 0 ]; then
+	    echo "error: $REPO_DIR" >&2
+	fi
+    fi
+    cd $(pop)
+done
