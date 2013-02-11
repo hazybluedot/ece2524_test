@@ -142,7 +142,7 @@ ahead to [[#initialize-a-new-repository][Initialize a new repository]].
 
    Create a file named 'reader.cc' containing the following lines:
 
-   #+BEGIN_EXAMPLE
+   #+BEGIN_SRC c++
        #include <iostream>
 
        using namespace std;
@@ -153,13 +153,13 @@ ahead to [[#initialize-a-new-repository][Initialize a new repository]].
                cout << line << endl;
            }
        }
-   #+END_EXAMPLE
+   #+END_SRC
 
    If you installed =build-essentials= you should be able to compile
    =reader.cc= and run the subsequent binary with the following
    commands:
 
-   #+BEGIN_EXAMPLE
+   #+BEGIN_SRC shell
        $ g++ -o reader reader.cc
        $ ./reader
        hello<ENTER>
@@ -168,17 +168,17 @@ ahead to [[#initialize-a-new-repository][Initialize a new repository]].
        world
        ^D
        $
-   #+END_EXAMPLE
+   #+END_SRC
 
 -  in Python
 
    Create a file named 'reader.py' containing the following lines:
 
    #+BEGIN_SRC python
-       import sys
-
-       for line in sys.stdin:
-           sys.stdout.write(line)
+     import sys
+     
+     for line in sys.stdin:
+         sys.stdout.write(line)
    #+END_SRC
 
    Now run the source using the python interpreter:
