@@ -1,0 +1,149 @@
+#+TITLE: Getting Textual
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Announcements
+** LUUG Feedback
+*** A Word from your president
+*** https://survey.vt.edu/survey/entry.jsp?id=1360546236446
+** Commenting on Blogs
+*** Click the title of the post you want to reply to
+*** reply in the box provided
+*** original author will need to approve before reply is published
+* Reflect
+** Mult - Part 1
+*** General thoughts
+*** input/output
+*** language differences
+* Talk about Text
+** A very brief history of text
+*** A very long time ago, in a galaxy far away, all printing and non printing characters could be represented with 7 bits
+*** The 8th bit was generally used as a parity bit for error checking
+#+begin_src sh
+$ man ascii
+#+end_src
+
+| Oct | Dec | Hex | Char                      | Oct | Dec | Hex | Char |
+|-----+-----+-----+---------------------------+-----+-----+-----+------|
+| 000 |   0 |  00 | NUL =\0=                  | 100 |  64 |  40 | @    |
+| 001 |   1 |  01 | SOH (start of heading)    | 101 |  65 |  41 | A    |
+| 002 |   2 |  02 | STX (start of text)       | 102 |  66 |  42 | B    |
+| 003 |   3 |  03 | ETX (end of text)         | 103 |  67 |  43 | C    |
+| 004 |   4 |  04 | EOT (end of transmission) | 104 |  68 |  44 | D    |
+| 005 |   5 |  05 | ENQ (enquiry)             | 105 |  69 |  45 | E    |
+| 006 |   6 |  06 | ACK (acknowledge)         | 106 |  70 |  46 | F    |
+|   . |   . |   . | .                         |   . |   . |   . | .    |
+*** Then people got clever
+
+** The Dark Ages
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :BEAMER_envargs: [<+->]
+    :END:
+What to do with 128 unused possibilities?
+*** Codepages
+*** Vendor Specific
+*** Customized by region
+*** Written to ROM
+*** Everyone was happy
+*** Until e-mail
+** The Enlightenment
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :BEAMER_envargs: [<+->]
+    :END:
+*** People got more clever
+*** UTF-8
+#+begin_src sh
+$ man utf-8
+#+end_src
+(from the manual)
+*** UCS characters 0x00000000 to 0x0000007f (the classic US-ASCII characters) are encoded simply as bytes 0x00 to 0x7f  (ASCII  compatibility).   
+*** All UCS characters greater than 0x7f are encoded as a multibyte sequence consisting only of bytes in the range 0x80 to 0xfd...
+
+** Text representation
+*** In Unix, a typical text file contains ASCII characters of separate lines of text
+*** lines are terminated with '=\n='
+*** for example, one line containing only "horse" is stored as
+  #+begin_example
+  h o r s e \n
+  #+end_example
+*** on a windows system this same line would be stored as
+  #+begin_example
+  h o r s e \r \n
+  #+end_example
+
+** What about C/C++?
+*** In C, character strings are stored in one dimensional arrays of 1-byte characters, terminated by the NULL character
+
+    #+attr_latex: align=|c|c|c|c|c|c|
+|---+---+---+---+---+------|
+| h | o | r | s | e | =\0= |
+|---+---+---+---+---+------|
+
+*** C++ strings hide the details. This is a nice feature if you don't care about the details, which may not always be the case.
+*** Lots of legacy code without Unicode support
+*** C++11 introduced better Unicode capabilities
+** Examining Text Files
+I created a file called "animals"
+#+begin_src sh
+$ cat ../files/animals
+horse  
+polar bear 
+kangaroo      
+$
+#+end_src
+
+#+begin_src sh
+$ wc ../files/animals
+ 3  4 26 ../files/animals
+#+end_src
+
+#+begin_src sh :results output
+$ od -c ../files/animals
+ 0000000   h   o   r   s   e  \n   p   o   l   a   r       b   e   a   r
+ 0000020  \n   k   a   n   g   a   r   o   o  \n
+ 0000032
+#+end_src
+
+** Editing Text Files
+Most windowing environments come with a graphical text editor
+*** gedit
+There are many command line tools available too
+*** sed # (non-interactive, more on this next week)
+*** vi/vim
+*** emacs
+(Both =vim= and =emacs= can also operate in their on graphical window)
+** A Tale of Two Editors
+*** =vi= (=vim=), the visual editor (improved)
+**** command mode and insertion mode
+**** line-based editing commands
+**** goal: fewest keystrokes possible
+*** =emacs=
+**** fully programmable (emacs-lisp)
+**** key bindings make extensive use of modifier keys
+**** An OS with an editor problem?
+*** Both are scriptable
+*** Both implement syntax highlighting
+*** Both can function as an IDE
+** Friendly Fire
+*** Escape Meta Alt Control Shift
+*** EMACS Makes A Computer Slow
+*** Eventually Malloc(s) All Computer Storage
+*** "Eighty Megabytes And Constantly Swapping"
+** Exercises this week
+*** =vimtutore=
+*** Run =emacs= and type =C-h t=
