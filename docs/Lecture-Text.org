@@ -16,13 +16,16 @@
 #+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
 
 * Announcements
-** LUUG Feedback
+** LUUG, Mentoring and E-mails, oh my
 *** A Word from your president
 *** https://survey.vt.edu/survey/entry.jsp?id=1360546236446
+*** Replying to class-wide e-mails
+*** Mentoring
 ** Commenting on Blogs
 *** Click the title of the post you want to reply to
 *** reply in the box provided
 *** original author will need to approve before reply is published
+
 * Reflect
 ** Mult - Part 1
 *** General thoughts
@@ -145,5 +148,5 @@ There are many command line tools available too
 *** Eventually Malloc(s) All Computer Storage
 *** "Eighty Megabytes And Constantly Swapping"
 ** Exercises this week
-*** =vimtutore=
+*** =vimtutor=
 *** Run =emacs= and type =C-h t=
