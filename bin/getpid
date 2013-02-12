@@ -1,0 +1,4 @@
+#!/bin/bash
+
+getrecord "$1" | grep PID | cut -d ' ' -f 2 | perl -ne 'chomp and print' | tee >(xsel -i -p)
+echo -ne "\n"

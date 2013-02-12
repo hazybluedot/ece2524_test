@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -z "$1" -o ! -r "$1" ]; then
+	echo "Usage: $(basename $0) blog_list" >&2
+	exit 1
+else
+    BLOG_FILE="$1"
+fi
+
+while read line; do
+    if grep Student <(echo $line) &>/dev/null; then
+	REAL_NAME=$(cut -d ',' -f 1,2 <(echo $line) | sed -r 's/"(['\''A-Za-z]+), ([-'\''A-Za-Z]+)"/\2 \1/')
+	echo $line,\"$(grep -i "$REAL_NAME" $BLOG_FILE | sed -r 's/[^:]+ (http[s]?:.*)$/\1/')\"
+    fi
+done 
+

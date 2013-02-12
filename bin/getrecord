@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+   echo "Usage: $(basename $0) SEARCH_PHRASE" >&2
+   exit 1
+fi
+
+function print_record
+{
+    LAST_NAME=$( cut -d ',' -f 1 <(echo $1) | sed 's/^\"//')
+    FIRST_NAME=$( cut -d ',' -f 2 <(echo $1) | sed 's/[ "]//g')
+    PID=$( cut -d ',' -f 3 <(echo $1) | sed 's/[ "]//g')
+    BLOG_URL=$(  cut -d ',' -f 6 <(echo $1) | sed 's/[ "]//g')
+    GIT_USER=$(  cut -d ',' -f 7 <(echo $1) | sed 's/[ "]//g')
+    
+    cat <<EOF
+Name: $FIRST_NAME $LAST_NAME
+PID: $PID
+Blog: $BLOG_URL
+git: $GIT_USER
+EOF
+}
+
+while read line; do
+    if grep -i "$1" <(echo $line) &>/dev/null; then
+	print_record "$line"
+    fi
+done
