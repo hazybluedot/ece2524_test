@@ -22,7 +22,7 @@ EOF
 }
 
 while read line; do
-    if grep -i "$1" <(echo $line) &>/dev/null; then
+    if egrep -i "\b$1" <(echo $line) &>/dev/null; then
 	print_record "$line"
     fi
 done
