@@ -118,12 +118,15 @@ $
 ~  # user's home directory
 #+end_src
 *** examples
+#+name lsexamples
 #+begin_src shell
 cd /home/dmaczka/ECE2524/doc
 ls
 ls ..
 ls ~/ECE2524
 #+end_src
+#+results: shellexamples
+
 * Use it Well
 ** Remote Access
 *** 

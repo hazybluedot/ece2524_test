@@ -58,6 +58,7 @@ $ cd newrepo
 *** Push early, you can always push updates later if you catch a mistake
 
 ** Git - reference
+*** Don't Panic
 *** http://git-scm.com/docs 
 *** Read Chapter 1.3 of Documentation/Book
 * Reflection
