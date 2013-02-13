@@ -1,0 +1,137 @@
+#+TITLE: The Filesystem
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Announcements
+** Git - creating a new repo
+*** Only one of these commands should be run and only once per project
+*** Mult part 1,2 and eventually 3 are all one project
+*** From scratch
+#+begin_example
+$ mkdir newrepo
+$ cd newrepo
+$ git init
+#+end_example
+*** From a remote (could be empty)
+#+begin_example
+$ git clone someurl:path/to/newrepo
+$ cd newrepo
+#+end_example
+*** =git clone= can be done /instead of/ =git init=
+*** All other git commands should be done from within the repo directory!
+** Git - updating the local repository
+*** =git add FILE1 FILE2...= # adds files to staging area
+*** =git commit= # commits staging area to repo
+*** Both are local operations
+*** Minimum one add/commit per assignment 
+   (e.g. Mult - Part 1, Part 2 and Part 3 are 3 assignments)
+*** You may, and in some cases /should/ do multiple adds/commits per assignment
+*** add/commit judiciously, you can easily "rewind" to any commit
+ 
+** Git - configuring the remote
+*** =git remote -v= 
+    ( list configured remote repos )
+    If you did a =git init= instead of =git clone= the list will be empty
+*** =git remote add origin [URL]= 
+    (add a remote named =origin= with url =[URL]=)
+*** =git remote set-url origin [URL]= 
+    ( update the =[URL]= of an existing remote named 'origin' )
+*** "Set it and forget it"
+
+** Git - pushing changes
+*** =git push origin master=
+    ( push the master branch of the local repo to the remote named =origin= )
+*** Pushing doesn't change your repo
+*** Push early, you can always push updates later if you catch a mistake
+
+* Reflection
+** Python, bash and C++, oh my
+*** line buffering
+*** error handling
+*** writing to /standard error/
+*** general syntax
+
+** Solutions
+*** If you have not already cloned the =mult= solutions repo
+#+begin_example
+$ git clone \
+ece2524git@ece2524.ece.vt.edu:solutions/mult.git \
+~/solutions/mult
+$ cd ~/solutions/mult
+#+end_example
+*** If you have already cloned the =mult= solutions repo
+#+begin_example
+$ cd solutions/mult
+$ git pull
+
+#+end_example
+
+** Pull in updates to example scripts and docs
+*** Refresh your =ece2524git@ece2524.ece.vt.edu:ece2524.git= repo
+*** =clone= if you haven't, =pull= if you have.
+
+** Last Week
+*** find inclass/ -name 'cpu\_count*' 
+*** find inclass/ -name 'islinux*'
+*** see =examples/week4.notes=
+*** shortest code?
+*** most Unix-y code?
+** Write to Reuse
+#+begin_example sh
+if islinux; then
+   # do something if running Linux
+else
+   # do something else
+fi
+#+end_example
+
+* Exercise
+** Install netcat
+*** =sudo apt-get install netcat-openbsd=
+#+begin_example
+$ nc www.vt.edu 80
+GET / HTTP/1.1
+Host: www.vt.edu
+
+
+#+end_example
+
+*** two line breaks after the "Host" line!
+*** see ece2524/examples/http_request
+
+** Write a URL validator
+*** create a new directory =week4=
+*** cd into =week4= and run =git init=
+*** Using =nc= and commands you used last week, write a bash script called =http_valid= that
+**** Accepts one command line argument (=$1=)
+     (see =http_request= for an example of using a command line argument in bash)
+**** exits with status 0 if the supplued URL returns an HTTP header with status =200=
+**** exits with status 1 otherwise
+**** no output should be written to /standard out/
+** Submit
+*** One submission per group
+*** Include =AUTHORS= file
+*** one "pid gitid" pair per line
+*** only two words per line
+#+begin_example
+wc -l <AUTHORS # returns number of people in group
+wc -w <AUTHORS # returns number of people x2 in group
+#+end_example
+*** =git add= and =git commit= 
+*** repo should contain =http_valid= and =AUTHORS=
+*** add a remote named =origin=
+  =ece2524git@ece2524.ece.vt.edu:inclass/CREATOR/week4.git=
+*** =git push origin master=
