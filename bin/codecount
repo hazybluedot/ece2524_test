@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# print out byte size of each file, excluding blank lines and lines starting with '#'
+if [ -z "$1" ]; then
+   ARG='-c'
+else
+   ARG="$1"
+fi
+
+while read path; do
+      echo "$path" $(sed -e '/^#.*$/d' -e '/^$/d' <"$path" | wc $ARG)
+done
