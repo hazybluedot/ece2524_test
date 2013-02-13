@@ -1,0 +1,15 @@
+# a synopsis of some commands I used in class
+# adjust the 'find' path and name match to suit your needs
+
+find inclass/ -name 'cpu_count*'
+find inclass/ -name 'cpu_count*' | codecount | sort -k 2 
+find inclass/ -name 'cpu_count*' | codecount | sort -k 2 | head -n 1
+
+###
+
+find inclass/ -name 'AUTHORS' | wc -l
+find inclass/ -iname 'AUTHORS' | wc -l
+find inclass/ -iname 'AUTHORS*' | wc -l
+find inclass/ -iname 'AUTHORS*' | wc -l
+find inclass/ -iname 'AUTHORS*' | xargs cat | sed -e '/[Pp][Ii][Dd]/d' -re 's/^(\w+)\s+(\w+)$/\1 \2/' | wc -l
+find inclass/ -iname 'AUTHORS*' | xargs cat | sed -e '/[Pp][Ii][Dd]/d' -re 's/^(\w+)\s+(\w+)$/\1 \2/' | egrep '^\w+\s+\w+$' | wc -l
