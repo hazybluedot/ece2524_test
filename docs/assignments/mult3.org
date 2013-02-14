@@ -38,26 +38,46 @@ to the next step in the assignment.
 
 ** Research
 
-Parsing command line arguments is a common thing when writing command
+** Exit Status
+   You should have already learned how to set exit status in a bash script when you did the =islinux= exercise in class (hint, try =man exit=).  Remember, setting the exit status is different from printing the exit code as output, and in fact you should /not/ print the exit code.  Python uses =sys.exit()= in exactly the same way while in C/C++ the exit status is the return value of the =main()= function. 
+
+** Command line options
+Parsing command line arguments is a common need when writing command
 line utilities, so it should be no suprise that there are a number of
 libraries available to help with the task. The three we will be using are
 
-- bash :: getopts
+- bash :: getopt
 - python :: [[http://docs.python.org/dev/library/argparse.html][argparse]]
 - C++ :: boost.Program_options
 
 Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assingment for one language.
 
-- Group 1 :: I am truly sorry group one, but you will be using =getopts= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
+*** Group 1 - getopts
+   I am truly sorry group one, but you will be using =getopt= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
+   The =getopt= program should be installed by default on your machine.  It not suprisingly has a =man= page.  Start by reading the manpage for =getopt=. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux= to get the examples).  
 
-- Group 2 :: argparse in Python
+*** Group 2 - argparse
+   The Python [[http://docs.python.org/2.7/library/argparse.html][documentation for argparse]] is extensive and can be overwhelming.  There is a tutorial linked at the top of the page which more of a step-by-step introduction to using the library.  The tutorial will take you through a process that implements a =-v=, =--verbose= option like we are looking for.  The adaption of that to the =-s=, =--strict= follows directly from there.  In both cases, the =argparse= module handles parsing command line options and setting boolean values in the =args= structure returned by the =parse_args()= function.  An example of using the values is in the tutorial as well.
 
-- Group 3 :: boost.Program\_options in C++
+*** Group 3 - boost.Program_options
+
+   Boost.Program_options is [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][well documented]], including a tutorial that provides enough instruction to jump in quickly.  You may safely ignore the "Multiple Sources" section of the tutorial.  The tutorial doesn't explicitly show a =-v=, =--verbose= example, but it, along with the =-s=, =--strict= can be implemented the same way the =-h=, =--help= argument is in the tutorial, though instead of printing a message if the option was present, you would set a boolean valued variable which could then be used later in the program in conditional statements.
+ - Beware of enum name collisions :: If you used the v2.0 of the solution code I posted it contains
+      #+begin_src c++
+      enum STR2INT_ERROR { SUCCESS, OVERFLOW, UNDERFLOW, INCONVERTIBLE };
+      #+end_src
+      If you try including =boost/program_options.hpp= and compile =g++= will report syntax errors on this line.  This is due to how C++ scopes enum values ( I tried using a C++11 enum class and had the same problem ).  It can be resolved by prefixing =STR2INT_= to each of the enum values.  I have posted v2.1 of the solutions which contain this update.
+ - Compiling and linking :: Group 3, you will have the added edge of learning how to link to external libraries before groups 2 and 3.  Of course, "with great power comes great responsibility".  Expect to share what you learn with the other two groups.  Ok, get ready for this.  Are you ready?
+
+      #+begin_src sh
+      $ g++ -o mult -lboost_program_options mult.cc
+      #+end_src
 
 ** General Specifications
 I will lay out the general specifications here and then make language specific notes in later sections.  In my example I will use =mult= as the executable program, but the same applies to =mult.py= and =mult.sh=.
 
 *** Command Line Arguments
+    =mult= shall accept the following two command line arguments, both a short form and long form version:
  - =-v=, =--verbose=
    
    When enabled and invalid input is encountered a warning shall be printed to /standard error/, just as it currently should be if you completed Part 2.  
@@ -105,20 +125,7 @@ $ echo $?
 $
 #+end_example
 
-** Group 1 - getopts
-** Group 2 - argparse
-** Group 3 - boost.Program_options
 
-** README
-For this and all future assignments, if you have notes that don't
-really belong in code comments, feel free to include a =README= or
-=README.md= file in the base directory of your repo.  You can use this
-file to include any special instructions for the users of your program
-(there shouldn't be any special instructions needed for this
-assignment!), and to mention known bugs, for instance, if error
-checking is working as you expect in =mult.py= and =mult.sh=, but not
-as you expect, or at all in =mult.cc= then make a note of that in the
-=README=.
 
 * Grading and Submission
 
