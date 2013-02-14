@@ -1,0 +1,163 @@
+#+TITLE Homework 3
+
+/Due:/ February 20 at 9:05am
+
+* Setup
+In this assignment you will add some modifications to the source files
+you submitted for [[../mult-part-1/][Mult - Part 2]].  If you didn't fully complete or
+understand that assignment be sure to review the solutions and ask
+your classmates or me for clarification before moving on to this one.
+
+* Introduction
+
+Work in the same directory as you have been for "Part 2" and "Part 1".
+All your git commands should be run from within your project
+directory.  Before you start, the output of =git log= when run from
+your project directory should contain at least two entries: one for
+the first part of the assignment and one for the second.  You may have
+more if you ran more than one commit per part, that is fine.
+
+In the previous part of this assignment you created three programs:
+=mult.sh=, =mult.py= and =mult.cc= that read data from /standard in/
+and wrote output to /standard out/ and errors to /standard error/. Now
+we will add the final two pieces that a command line utility needs to
+fully interact with the outside world: command line arguments, and
+exit status.
+
+* Assignment
+** Overview
+
+The final product of this assignment will be three source files:
+=mult.sh=, =mult.py= and =mult.cc= in the base directory of your git
+repo. The base directory is the directory that contains the =.git=
+directory. Double check that your source files are in the base
+directory of your repo (most were) and use =git mv= to move files into
+the base directory if they were not already.  If you had to move files
+around, commit those changes now with a =git commit=, before going on
+to the next step in the assignment.
+
+** Research
+
+Parsing command line arguments is a common thing when writing command
+line utilities, so it should be no suprise that there are a number of
+libraries available to help with the task. The three we will be using are
+
+- bash :: getopts
+- python :: [[http://docs.python.org/dev/library/argparse.html][argparse]]
+- C++ :: boost.Program_options
+
+Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assingment for one language.
+
+- Group 1 :: I am truly sorry group one, but you will be using =getopts= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
+
+- Group 2 :: argparse in Python
+
+- Group 3 :: boost.Program\_options in C++
+
+** General Specifications
+I will lay out the general specifications here and then make language specific notes in later sections.  In my example I will use =mult= as the executable program, but the same applies to =mult.py= and =mult.sh=.
+
+*** Command Line Arguments
+ - =-v=, =--verbose=
+   
+   When enabled and invalid input is encountered a warning shall be printed to /standard error/, just as it currently should be if you completed Part 2.  
+
+ - =-s=, =--strict=
+   
+   When enabled and invalid input is encountared the program shall print an error to /standard error/ and exit with status =1=
+
+#+label input with non-integer strings
+|         | verbose | strict |
+|---------+---------+--------|
+| verbose | warning | error  |
+|         | exit 0  | exit 1 |
+|---------+---------+--------|
+| strict  | error   | error  |
+|         | exit 1  | exit 1 |
+
+#+label input with only valid integer strings
+|         | verbose | strict  |
+|---------+---------+---------|
+| verbose | nothing | nothing |
+|         | exit 0  | exit 0  |
+| strict  | nothing | nothing |
+|         | exit 0  | exit 0  |
+
+If you think about this a bit it should make sense.  If you tell your program you want it to be "strict", then it should fail loudly on any non-strict input.  If you tell it not to be strict and not to be verbose then if it gets bad input that it can safely ignore you would like it to do so without making a fuss about it.  Also telling it you want it to be "verbose" means you actually do want it to tell you when it's skipping over a line it can't process.
+
+*** Exit status
+If =mult= is able to perform a multiplication it shall exit with status =0=. Note that without =--strict= enabled, the presence of a non-integer string on input does not prevent =mult= from generating a product, so this is not an error condition.  If =-s= or =--strict= is enabled however, then the presence of a non-integer string /is/ and error condition and should trigger an exit status of =1=.  To test the exit code of your program you can echo the special variable =$?= which contains the exit code of the last run command.
+
+#+begin_example
+$ cat numbers
+3
+2
+five
+-1
+$ ./mult < numbers
+-6
+$ echo $?
+0
+$ ./mult -s < numbers
+(standard in):3: cannot convert to integer  
+$ echo $?
+1
+$
+#+end_example
+
+** Group 1 - getopts
+** Group 2 - argparse
+** Group 3 - boost.Program_options
+
+** README
+For this and all future assignments, if you have notes that don't
+really belong in code comments, feel free to include a =README= or
+=README.md= file in the base directory of your repo.  You can use this
+file to include any special instructions for the users of your program
+(there shouldn't be any special instructions needed for this
+assignment!), and to mention known bugs, for instance, if error
+checking is working as you expect in =mult.py= and =mult.sh=, but not
+as you expect, or at all in =mult.cc= then make a note of that in the
+=README=.
+
+* Grading and Submission
+
+In addition to proper functionality described by the assignment I will be looking for:
+
+- proper use of /standard in/, /standard out/ and /standard error/
+- demonstrate understanding of error handling philosophy for each language
+- readable code
+- elegant solutions
+
+- Make sure you have added and committed your final changes to your repository (=git status= should report a clean working directory).  
+
+- =git log= should report at least one additional commit compared to what you submitted for part 1, more commits are ok of course.
+
+Once you have added and committed all your changes, run the following command from your working directory:
+
+#+BEGIN_EXAMPLE
+    $ git push
+#+END_EXAMPLE
+
+If you get a message from git indicating it doesn't know which branch you want to push, or which remote you want to push to, then instead run
+
+#+begin_example
+    $ git push --set-upstream origin master
+#+end_example
+
+and next time you should only have to use =git push=.
+
+If the command executes without any errors you should be
+done. Remember, you can always clone your repo into a new location to
+see exactly what state it is on the server.
+
+#+begin_example
+$ cd /tmp
+$ git clone [full repo url]
+$ cd mult
+$ ls
+mult.cc  mult.py  mult.sh  README
+$
+#+end_example
+
+Once again, check that your three source files are in the base directory of your repo!
