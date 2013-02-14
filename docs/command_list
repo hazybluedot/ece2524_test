@@ -7,8 +7,6 @@ echo
 sed
 grep
 cut
-expand
-unexpand
 less
 tr
 date
@@ -16,3 +14,5 @@ wc
 head
 tail
 tac
+bc
+test
