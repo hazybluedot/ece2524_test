@@ -12,10 +12,10 @@ your classmates or me for clarification before moving on to this one.
 
 Work in the same directory as you have been for "Part 2" and "Part 1".
 All your git commands should be run from within your project
-directory.  Before you start, the output of =git log= when run from
-your project directory should contain at least two entries: one for
-the first part of the assignment and one for the second.  You may have
-more if you ran more than one commit per part, that is fine.
+directory.  Before you start, confirm that the output of =git log=
+(when run from your project directory) contains at least two
+entries: one for the first part of the assignment and one for the
+second.  You may have more if you ran more than one commit per part.
 
 In the previous part of this assignment you created three programs:
 =mult.sh=, =mult.py= and =mult.cc= that read data from /standard in/
@@ -34,27 +34,27 @@ directory. Double check that your source files are in the base
 directory of your repo (most were) and use =git mv= to move files into
 the base directory if they were not already.  If you had to move files
 around, commit those changes now with a =git commit=, before going on
-to the next step in the assignment.
+to the next step in the assignment.  You will update *only one* of
+your source files, depending on which blog group you are in.
 
 ** Research
+*** Exit Status
+   You should have already learned how to set exit status in a bash script when you did the =islinux= exercise in class (hint, try =man exit=).  Remember, setting the exit status is different from printing the exit code as output, and in fact you should /not/ print the exit code.  Python uses =sys.exit()= in exactly the same way while in C/C++ the exit status is the return value of the =main()= function. Be sure you understand how to set exit status in each of the three languages, though you will only be implementing it in one for now.
 
-** Exit Status
-   You should have already learned how to set exit status in a bash script when you did the =islinux= exercise in class (hint, try =man exit=).  Remember, setting the exit status is different from printing the exit code as output, and in fact you should /not/ print the exit code.  Python uses =sys.exit()= in exactly the same way while in C/C++ the exit status is the return value of the =main()= function. 
-
-** Command line options
+*** Command line options
 Parsing command line arguments is a common need when writing command
-line utilities, so it should be no suprise that there are a number of
+line utilities, so it should be no surprise that there are a number of
 libraries available to help with the task. The three we will be using are
 
 - bash :: getopt
 - python :: [[http://docs.python.org/dev/library/argparse.html][argparse]]
-- C++ :: boost.Program_options
+- C++ :: [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][boost.Program_options]]
 
-Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assingment for one language.
+Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assignment for one language.
 
-*** Group 1 - getopts
+*** Group 1 - getopt
    I am truly sorry group one, but you will be using =getopt= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
-   The =getopt= program should be installed by default on your machine.  It not suprisingly has a =man= page.  Start by reading the manpage for =getopt=. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux= to get the examples).  
+   The =getopt= program should be installed by default on your machine.  It not surprisingly has a =man= page: start by reading it. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux=). Note that the example makes use of command line options that take values as well as value-less flags   
 
 *** Group 2 - argparse
    The Python [[http://docs.python.org/2.7/library/argparse.html][documentation for argparse]] is extensive and can be overwhelming.  There is a tutorial linked at the top of the page which more of a step-by-step introduction to using the library.  The tutorial will take you through a process that implements a =-v=, =--verbose= option like we are looking for.  The adaption of that to the =-s=, =--strict= follows directly from there.  In both cases, the =argparse= module handles parsing command line options and setting boolean values in the =args= structure returned by the =parse_args()= function.  An example of using the values is in the tutorial as well.
@@ -86,6 +86,12 @@ I will lay out the general specifications here and then make language specific n
    
    When enabled and invalid input is encountared the program shall print an error to /standard error/ and exit with status =1=
 
+ - =-h=, =--help=
+   
+   When present, regardless of any other command line options, =mult= shall print a "usage" summary to /standard error/ and exit with status =0=
+
+ - When any command line arguments are present that are not one of, or a combination of any of the above mentioned arguments =mult= shall print a "usage" summary to /standard error/ and exit with status =1=
+
 #+label input with non-integer strings
 |         | verbose | strict |
 |---------+---------+--------|
@@ -104,6 +110,18 @@ I will lay out the general specifications here and then make language specific n
 |         | exit 0  | exit 0  |
 
 If you think about this a bit it should make sense.  If you tell your program you want it to be "strict", then it should fail loudly on any non-strict input.  If you tell it not to be strict and not to be verbose then if it gets bad input that it can safely ignore you would like it to do so without making a fuss about it.  Also telling it you want it to be "verbose" means you actually do want it to tell you when it's skipping over a line it can't process.
+
+Example usage summary:
+#+begin_src sh
+$ ./mult -h
+Allowed options:
+  -h [ --help ]         produce help message
+  -v [ --verbose ]      be verbose
+  -s [ --strict ]       be strict
+$
+#+end_src
+
+Remember, if the user *asks* for help by specifying the =-h= or =--help= flag, then there is no error: The output requested should go to /standard out/ and the exit status should be 0 for success.  If the usage message is printed as a result of invalid arguments this /is/ and error condition, the message should print to /standard error/ and the program exit with non-zero exit status (in this case, =1=).
 
 *** Exit status
 If =mult= is able to perform a multiplication it shall exit with status =0=. Note that without =--strict= enabled, the presence of a non-integer string on input does not prevent =mult= from generating a product, so this is not an error condition.  If =-s= or =--strict= is enabled however, then the presence of a non-integer string /is/ and error condition and should trigger an exit status of =1=.  To test the exit code of your program you can echo the special variable =$?= which contains the exit code of the last run command.
@@ -124,7 +142,6 @@ $ echo $?
 1
 $
 #+end_example
-
 
 
 * Grading and Submission
