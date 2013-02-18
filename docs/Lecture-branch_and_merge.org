@@ -54,22 +54,39 @@
 *** a named branch 'featureX' is the ancestry of all heads starting with the one named 'featureX'
 *** we are /on/ branch 'featureX' if HEAD and 'featureX' point to the same head.
 *** merge merges changes in a specified branch into the current (HEAD)
-** Merge
+** checkout master
 #+begin_example
 (Unifying Ideas ) 
-     \-----------------------------------( git is unix-y )
+     \-------------------------------(recap)
+      \                                 |
+       + (how git works) -- ( e.g. )    |
+                                      HEAD
+#+end_example
+*** unix commands manipulate data (usually text)
+*** each command does one thing and one thing well
+*** simple commands can be combined in a sequence to perform complex operations
+** merge
+#+begin_example
+(Unifying Ideas ) 
+     \----------------------(recap)------( git is unix-y )
       \                                 /       |
        + (how git works) -- ( e.g. ) --+        |
                                                HEAD
 #+end_example
-*** unix commands manipulate data (usually textual)
-*** each command does one thing and one thing well
+
 *** git commands manipulate data
 *** each command does one thing and one thing well
 *** in both cases individual commands perform simple operations
-*** when combined in a sequence complex behavior can be implemented
+*** simple commans can be combined in a sequence to perform complex operations
 ** Fast Forward
-*** On Wednesday you will work in groups of 3
-*** branch group members repo
+#+begin_example
+ 
+---(recap)------( git is unix-y ) -- ( wednesday )
+               /       |
+-- ( e.g. ) --+        |
+                     HEAD
+#+end_example
+*** work in groups of 3, one from each blog group
+*** branch group members' repo
 *** implement command line arguments in your target language
 *** merge changes
