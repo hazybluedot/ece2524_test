@@ -1,0 +1,75 @@
+#+TITLE: A Meta Side Branch
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Announcements
+** Today's Office hours
+*** Office hours 1:00-2:30pm
+* Reflection
+** Unifying Ideas of Unix
+*** everything is a file
+*** connecting processes with pipes
+*** each process operates on text and outputs more text that another process can operate on
+** A Branch
+#+begin_example
+(Unifying Ideas ) 
+     \------------------
+      \                        
+       + (how git works) 
+               |
+             HEAD
+#+end_example
+*** git data model
+**** objects
+**** heads and HEAD
+*** git commands manipulate the objects and heads
+**** git commit adds a new commit object, sets =HEAD= to current commit object.  
+** Visualization demo
+#+begin_example
+(Unifying Ideas ) 
+     \------------------------------
+      \                             
+       + (how git works) -- ( e.g. )
+                               |
+                             HEAD
+#+end_example
+** Recap
+*** commit adds new commit objects to the repo
+**** each commit object has a parent
+*** some heads may be named (e.g. 'master')
+*** branch and checkout change which commit object HEAD points to
+*** a named branch 'featureX' is the ancestry of all heads starting with the one named 'featureX'
+*** we are /on/ branch 'featureX' if HEAD and 'featureX' point to the same head.
+*** merge merges changes in a specified branch into the current (HEAD)
+** Merge
+#+begin_example
+(Unifying Ideas ) 
+     \-----------------------------------( git is unix-y )
+      \                                 /       |
+       + (how git works) -- ( e.g. ) --+        |
+                                               HEAD
+#+end_example
+*** unix commands manipulate data (usually textual)
+*** each command does one thing and one thing well
+*** git commands manipulate data
+*** each command does one thing and one thing well
+*** in both cases individual commands perform simple operations
+*** when combined in a sequence complex behavior can be implemented
+** Fast Forward
+*** On Wednesday you will work in groups of 3
+*** branch group members repo
+*** implement command line arguments in your target language
+*** merge changes

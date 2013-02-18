@@ -46,22 +46,22 @@ Parsing command line arguments is a common need when writing command
 line utilities, so it should be no surprise that there are a number of
 libraries available to help with the task. The three we will be using are
 
-- bash :: [[http://linux.die.net/man/1/getopt][getopt]]
+- bash :: getopt
 - python :: [[http://docs.python.org/dev/library/argparse.html][argparse]]
-- C++ :: [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][boost.Program\_options]]
+- C++ :: [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][boost.Program_options]]
 
 Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assignment for one language.
 
 *** Group 1 - getopt
-   I am truly sorry, group one, but you will be using =getopt= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more than it is, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
-   The =getopt= program should be installed by default on your machine.  It not surprisingly has a =man= page: start by reading it. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux=). Note that the example makes use of command line options that take values as well as value-less flags. You should be able to modify the example code to meet the specifications of this assignment.   
+   I am truly sorry group one, but you will be using =getopt= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
+   The =getopt= program should be installed by default on your machine.  It not surprisingly has a =man= page: start by reading it. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux=). Note that the example makes use of command line options that take values as well as value-less flags   
 
 *** Group 2 - argparse
    The Python [[http://docs.python.org/2.7/library/argparse.html][documentation for argparse]] is extensive and can be overwhelming.  There is a tutorial linked at the top of the page which more of a step-by-step introduction to using the library.  The tutorial will take you through a process that implements a =-v=, =--verbose= option like we are looking for.  The adaption of that to the =-s=, =--strict= follows directly from there.  In both cases, the =argparse= module handles parsing command line options and setting boolean values in the =args= structure returned by the =parse_args()= function.  An example of using the values is in the tutorial as well.
 
-*** Group 3 - boost.Program\_options
+*** Group 3 - boost.Program_options
 
-   Boost.Program\_options is [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][well documented]], including a tutorial that provides enough instruction to jump in quickly.  You may safely ignore the "Multiple Sources" section of the tutorial.  The tutorial doesn't explicitly show a =-v=, =--verbose= example, but it, along with the =-s=, =--strict= can be implemented the same way the =-h=, =--help= argument is in the tutorial, though instead of printing a message if the option was present, you would set a boolean valued variable which could then be used later in the program in conditional statements.
+   Boost.Program_options is [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][well documented]], including a tutorial that provides enough instruction to jump in quickly.  You may safely ignore the "Multiple Sources" section of the tutorial.  The tutorial doesn't explicitly show a =-v=, =--verbose= example, but it, along with the =-s=, =--strict= can be implemented the same way the =-h=, =--help= argument is in the tutorial, though instead of printing a message if the option was present, you would set a boolean valued variable which could then be used later in the program in conditional statements.
  - Beware of enum name collisions :: If you used the v2.0 of the solution code I posted it contains
       #+begin_src c++
       enum STR2INT_ERROR { SUCCESS, OVERFLOW, UNDERFLOW, INCONVERTIBLE };
@@ -73,13 +73,12 @@ Because each of these libraries can take some work to learn to use effectively w
       $ g++ -o mult -lboost_program_options mult.cc
       #+end_src
 
-      Not as bad as you thought, right? The =-l= option to =g++= is used to list dynamic libraries to link to. Of course the library must be installed on your system for this to work! On Ubuntu (and presumably other Debian-based systems) installing =libboost-all-dev=.
-
 ** General Specifications
-   In my example I will use =mult= as the executable program, but the same applies to =mult.py= and =mult.sh=.
+I will lay out the general specifications here and then make language specific notes in later sections.  In my example I will use =mult= as the executable program, but the same applies to =mult.py= and =mult.sh=.
 
 *** Command Line Arguments
-    =mult= shall accept the following three command line arguments, both a short form and long form version:
+    =mult= shall accept the following two command line arguments, both a short form and long form version:
+
  - =-v=, =--verbose=
    
    When enabled and invalid input is encountered a warning shall be printed to /standard error/, just as it currently should be if you completed Part 2.  
@@ -92,21 +91,9 @@ Because each of these libraries can take some work to learn to use effectively w
    
    When present, regardless of any other command line options, =mult= shall print a "usage" summary to /standard error/ and exit with status =0=
 
-   Example usage summary:
-   #+begin_src sh
-$ ./mult -h
-Allowed options:
-  -h [ --help ]         produce help message
-  -v [ --verbose ]      be verbose
-  -s [ --strict ]       be strict
-$
-#+end_src
+ - When any command line arguments are present that are not one of, or a combination of any of the above mentioned arguments =mult= shall print a "usage" summary to /standard error/ and exit with status =1=
 
- - When any command line arguments are present that are not one of, or a combination of any of the above mentioned arguments =mult= shall print a "usage" summary to /standard error/ and exit with status =1=.  *Rational:*  If the user *asks* for help by specifying the =-h= or =--help= flag, then there is no error: The output requested should go to /standard out/ and the exit status should be 0 for success.  If the usage message is printed as a result of invalid arguments this /is/ and error condition, the message should print to /standard error/ and the program exit with non-zero exit status (in this case, =1=).
-
-
-
-# #+label input with non-integer strings
+#+label input with non-integer strings
 # |         | verbose | strict |
 # |---------+---------+--------|
 # | verbose | warning | error  |
@@ -115,19 +102,30 @@ $
 # | strict  | error   | error  |
 # |         | exit 1  | exit 1 |
 
-# #+label input with only valid integer strings
+#+label input with only valid integer strings
 # |         | verbose | strict  |
 # |---------+---------+---------|
-# | verbose | nothing | nothing |
+# | verbose  | nothing | nothing |
 # |         | exit 0  | exit 0  |
 # | strict  | nothing | nothing |
 # |         | exit 0  | exit 0  |
 
 If you think about this a bit it should make sense.  If you tell your program you want it to be "strict", then it should fail loudly on any non-strict input.  If you tell it not to be strict and not to be verbose then if it gets bad input that it can safely ignore you would like it to do so without making a fuss about it.  Also telling it you want it to be "verbose" means you actually do want it to tell you when it's skipping over a line it can't process.
 
+Example usage summary:
+#+begin_src sh
+$ ./mult -h
+Allowed options:
+  -h [ --help ]         produce help message
+  -v [ --verbose ]      be verbose
+  -s [ --strict ]       be strict
+$
+#+end_src
+
+Remember, if the user *asks* for help by specifying the =-h= or =--help= flag, then there is no error: The output requested should go to /standard out/ and the exit status should be 0 for success.  If the usage message is printed as a result of invalid arguments this /is/ and error condition, the message should print to /standard error/ and the program exit with non-zero exit status (in this case, =1=).
 
 *** Exit status
-If =mult= is able to perform a multiplication it shall exit with status =0=. Note that without =--strict= enabled, the presence of a non-integer string on input does not prevent =mult= from generating a product, so this is not an error condition and =mult= shall still exit with status =0=.  If =-s= or =--strict= is enabled however, then the presence of a non-integer string /is/ an error condition and should trigger an exit status of =1=.  To test the exit code of your program you can echo the special variable =$?= which contains the exit code of the last run command.
+If =mult= is able to perform a multiplication it shall exit with status =0=. Note that without =--strict= enabled, the presence of a non-integer string on input does not prevent =mult= from generating a product, so this is not an error condition.  If =-s= or =--strict= is enabled however, then the presence of a non-integer string /is/ and error condition and should trigger an exit status of =1=.  To test the exit code of your program you can echo the special variable =$?= which contains the exit code of the last run command.
 
 #+begin_example
 $ cat numbers
@@ -148,25 +146,16 @@ $
 
 * Grading and Submission
 
-All three source files should still be a part of your repository that you push (i.e. don't remove anything from part 2), but you will only have modified one of the three files.  In addition, add and commit an empty file called =group#= replacing =#= with your group number.  You can easily create an empty file with the =touch= command, e.g. if you were in group 1:
-#+begin_src sh
-$ touch group1
-$ git add group1
-$ git commit
-#+end_src
-
-You may also include an optional =README= file if you have any notes for me.
-
 In addition to proper functionality described by the assignment I will be looking for:
 
 - proper use of /standard in/, /standard out/ and /standard error/
 - demonstrate understanding of error handling philosophy for each language
-- proper use of exit code
 - readable code
 - elegant solutions
-- git log consisting of at least three commits, one for each part of the "mult" series of assignments.
 
 - Make sure you have added and committed your final changes to your repository (=git status= should report a clean working directory).  
+
+- =git log= should report at least one additional commit compared to what you submitted for part 1, more commits are ok of course.
 
 Once you have added and committed all your changes, run the following command from your working directory:
 
