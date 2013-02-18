@@ -1,0 +1,3 @@
+#!/bin/sh
+
+watch -n 1 "find .git/refs/heads/ -type f -exec grep '[a-f0-9]' '{}' \+"
