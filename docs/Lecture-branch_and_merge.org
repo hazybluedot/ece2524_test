@@ -1,4 +1,4 @@
-#+TITLE: A Side Branch
+#+TITLE: A Meta Side Branch
 #+AUTHOR: Darren Maczka
 #+LaTeX_HEADER: \usepackage{xcolor}
 #+LaTeX_HEADER: \usepackage{mathptmx}
@@ -69,4 +69,7 @@
 *** in both cases individual commands perform simple operations
 *** when combined in a sequence complex behavior can be implemented
 ** Fast Forward
-*** On wednesday 
+*** On Wednesday you will work in groups of 3
+*** branch group members repo
+*** implement command line arguments in your target language
+*** merge changes
