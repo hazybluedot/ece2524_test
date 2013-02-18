@@ -1,0 +1,198 @@
+#+TITLE Homework 3
+
+/Due:/ February 20 at 9:05am
+
+* Setup
+In this assignment you will add some modifications to the source files
+you submitted for [[../03-mult-part-2/][Mult - Part 2]].  If you didn't fully complete or
+understand that assignment be sure to review the solutions and ask
+your classmates or me for clarification before moving on to this one.
+
+* Introduction
+
+Work in the same directory as you have been for "Part 2" and "Part 1".
+All your git commands should be run from within your project
+directory.  Before you start, confirm that the output of =git log=
+(when run from your project directory) contains at least two
+entries: one for the first part of the assignment and one for the
+second.  You may have more if you ran more than one commit per part.
+
+In the previous part of this assignment you created three programs:
+=mult.sh=, =mult.py= and =mult.cc= that read data from /standard in/
+and wrote output to /standard out/ and errors to /standard error/. Now
+we will add the final two pieces that a command line utility needs to
+fully interact with the outside world: command line arguments, and
+exit status.
+
+* Assignment
+** Overview
+
+The final product of this assignment will be three source files:
+=mult.sh=, =mult.py= and =mult.cc= in the base directory of your git
+repo. The base directory is the directory that contains the =.git=
+directory. Double check that your source files are in the base
+directory of your repo (most were) and use =git mv= to move files into
+the base directory if they were not already.  If you had to move files
+around, commit those changes now with a =git commit=, before going on
+to the next step in the assignment.  You will update *only one* of
+your source files, depending on which blog group you are in.
+
+** Research
+*** Exit Status
+   You should have already learned how to set exit status in a bash script when you did the =islinux= exercise in class (hint, try =man exit=).  Remember, setting the exit status is different from printing the exit code as output, and in fact you should /not/ print the exit code.  Python uses =sys.exit()= in exactly the same way while in C/C++ the exit status is the return value of the =main()= function. Be sure you understand how to set exit status in each of the three languages, though you will only be implementing it in one for now.
+
+*** Command line options
+Parsing command line arguments is a common need when writing command
+line utilities, so it should be no surprise that there are a number of
+libraries available to help with the task. The three we will be using are
+
+- bash :: [[http://linux.die.net/man/1/getopt][getopt]]
+- python :: [[http://docs.python.org/dev/library/argparse.html][argparse]]
+- C++ :: [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][boost.Program\_options]]
+
+Because each of these libraries can take some work to learn to use effectively we will break into three groups, based on your blog group, and each group will only complete the assignment for one language.
+
+*** Group 1 - getopt
+   I am truly sorry, group one, but you will be using =getopt= to parse command line options in bash.  It may not be pretty, and it may increase your dislike of bash even more than it is, but know that you will have major bragging rights over groups 2 and 3 after completing this assignment.
+   The =getopt= program should be installed by default on your machine.  It not surprisingly has a =man= page: start by reading it. Under the example section it should mentioned a location on the system where optional example scripts are installed.  Check to see that the examples are installed (they were by default on my copy of Ubuntu 12.10, on Arch Linux I had to install =util-linux=). Note that the example makes use of command line options that take values as well as value-less flags. You should be able to modify the example code to meet the specifications of this assignment.   
+
+*** Group 2 - argparse
+   The Python [[http://docs.python.org/2.7/library/argparse.html][documentation for argparse]] is extensive and can be overwhelming.  There is a tutorial linked at the top of the page which more of a step-by-step introduction to using the library.  The tutorial will take you through a process that implements a =-v=, =--verbose= option like we are looking for.  The adaption of that to the =-s=, =--strict= follows directly from there.  In both cases, the =argparse= module handles parsing command line options and setting boolean values in the =args= structure returned by the =parse_args()= function.  An example of using the values is in the tutorial as well.
+
+*** Group 3 - boost.Program\_options
+
+   Boost.Program\_options is [[http://www.boost.org/doc/libs/1_53_0/doc/html/program_options.html][well documented]], including a tutorial that provides enough instruction to jump in quickly.  You may safely ignore the "Multiple Sources" section of the tutorial.  The tutorial doesn't explicitly show a =-v=, =--verbose= example, but it, along with the =-s=, =--strict= can be implemented the same way the =-h=, =--help= argument is in the tutorial, though instead of printing a message if the option was present, you would set a boolean valued variable which could then be used later in the program in conditional statements.
+ - Beware of enum name collisions :: If you used the v2.0 of the solution code I posted it contains
+      #+begin_src c++
+      enum STR2INT_ERROR { SUCCESS, OVERFLOW, UNDERFLOW, INCONVERTIBLE };
+      #+end_src
+      If you try including =boost/program_options.hpp= and compile =g++= will report syntax errors on this line.  This is due to how C++ scopes enum values ( I tried using a C++11 enum class and had the same problem ).  It can be resolved by prefixing =STR2INT_= to each of the enum values.  I have posted v2.1 of the solutions which contain this update.
+ - Compiling and linking :: Group 3, you will have the added edge of learning how to link to external libraries before groups 2 and 3.  Of course, "with great power comes great responsibility".  Expect to share what you learn with the other two groups.  Ok, get ready for this.  Are you ready?
+
+      #+begin_src sh
+      $ g++ -o mult -lboost_program_options mult.cc
+      #+end_src
+
+      Not as bad as you thought, right? The =-l= option to =g++= is used to list dynamic libraries to link to. Of course the library must be installed on your system for this to work! On Ubuntu (and presumably other Debian-based systems) installing =libboost-all-dev=.
+
+** General Specifications
+   In my example I will use =mult= as the executable program, but the same applies to =mult.py= and =mult.sh=.
+
+*** Command Line Arguments
+    =mult= shall accept the following three command line arguments, both a short form and long form version:
+ - =-v=, =--verbose=
+   
+   When enabled and invalid input is encountered a warning shall be printed to /standard error/, just as it currently should be if you completed Part 2.  
+
+ - =-s=, =--strict=
+   
+   When enabled and invalid input is encountared the program shall print an error to /standard error/ and exit with status =1=
+
+ - =-h=, =--help=
+   
+   When present, regardless of any other command line options, =mult= shall print a "usage" summary to /standard error/ and exit with status =0=
+
+   Example usage summary:
+   #+begin_src sh
+$ ./mult -h
+Allowed options:
+  -h [ --help ]         produce help message
+  -v [ --verbose ]      be verbose
+  -s [ --strict ]       be strict
+$
+#+end_src
+
+ - When any command line arguments are present that are not one of, or a combination of any of the above mentioned arguments =mult= shall print a "usage" summary to /standard error/ and exit with status =1=.  *Rational:*  If the user *asks* for help by specifying the =-h= or =--help= flag, then there is no error: The output requested should go to /standard out/ and the exit status should be 0 for success.  If the usage message is printed as a result of invalid arguments this /is/ and error condition, the message should print to /standard error/ and the program exit with non-zero exit status (in this case, =1=).
+
+
+
+# #+label input with non-integer strings
+# |         | verbose | strict |
+# |---------+---------+--------|
+# | verbose | warning | error  |
+# |         | exit 0  | exit 1 |
+# |---------+---------+--------|
+# | strict  | error   | error  |
+# |         | exit 1  | exit 1 |
+
+# #+label input with only valid integer strings
+# |         | verbose | strict  |
+# |---------+---------+---------|
+# | verbose | nothing | nothing |
+# |         | exit 0  | exit 0  |
+# | strict  | nothing | nothing |
+# |         | exit 0  | exit 0  |
+
+If you think about this a bit it should make sense.  If you tell your program you want it to be "strict", then it should fail loudly on any non-strict input.  If you tell it not to be strict and not to be verbose then if it gets bad input that it can safely ignore you would like it to do so without making a fuss about it.  Also telling it you want it to be "verbose" means you actually do want it to tell you when it's skipping over a line it can't process.
+
+
+*** Exit status
+If =mult= is able to perform a multiplication it shall exit with status =0=. Note that without =--strict= enabled, the presence of a non-integer string on input does not prevent =mult= from generating a product, so this is not an error condition and =mult= shall still exit with status =0=.  If =-s= or =--strict= is enabled however, then the presence of a non-integer string /is/ an error condition and should trigger an exit status of =1=.  To test the exit code of your program you can echo the special variable =$?= which contains the exit code of the last run command.
+
+#+begin_example
+$ cat numbers
+3
+2
+five
+-1
+$ ./mult < numbers
+-6
+$ echo $?
+0
+$ ./mult -s < numbers
+(standard in):3: cannot convert to integer  
+$ echo $?
+1
+$
+#+end_example
+
+* Grading and Submission
+
+All three source files should still be a part of your repository that you push (i.e. don't remove anything from part 2), but you will only have modified one of the three files.  In addition, add and commit an empty file called =group#= replacing =#= with your group number.  You can easily create an empty file with the =touch= command, e.g. if you were in group 1:
+#+begin_src sh
+$ touch group1
+$ git add group1
+$ git commit
+#+end_src
+
+You may also include an optional =README= file if you have any notes for me.
+
+In addition to proper functionality described by the assignment I will be looking for:
+
+- proper use of /standard in/, /standard out/ and /standard error/
+- demonstrate understanding of error handling philosophy for each language
+- proper use of exit code
+- readable code
+- elegant solutions
+- git log consisting of at least three commits, one for each part of the "mult" series of assignments.
+
+- Make sure you have added and committed your final changes to your repository (=git status= should report a clean working directory).  
+
+Once you have added and committed all your changes, run the following command from your working directory:
+
+#+BEGIN_EXAMPLE
+    $ git push
+#+END_EXAMPLE
+
+If you get a message from git indicating it doesn't know which branch you want to push, or which remote you want to push to, then instead run
+
+#+begin_example
+    $ git push --set-upstream origin master
+#+end_example
+
+and next time you should only have to use =git push=.
+
+If the command executes without any errors you should be
+done. Remember, you can always clone your repo into a new location to
+see exactly what state it is on the server.
+
+#+begin_example
+$ cd /tmp
+$ git clone [full repo url]
+$ cd mult
+$ ls
+mult.cc  mult.py  mult.sh  README
+$
+#+end_example
+
+Once again, check that your three source files are in the base directory of your repo!
