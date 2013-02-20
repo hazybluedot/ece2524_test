@@ -1,0 +1,68 @@
+#+TITLE: Fork and Merge
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 1
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+
+* Terms
+** Authors
+  - MAINTAINER :: the original owner of the project
+  - CONTRIBUTOR :: the one adding the new feature
+** Remote paths
+  - REMOTE :: =ece2524git@ece2524.ece.vt.edu=
+  - ORIGINURL :: =REMOTE:assignments/MAINTAINER/mult.git=
+  - FORKURL :: =REMOTE:inclass/CONTRIBUTOR/multfork.git=
+
+* Procedure - CONTRIBUTOR
+** fork a copy of repo from MAINTAINER
+ : git clone ORIGINURL ~/forks/MAINTAINER/mult
+ : cd ~/forks/MAINTAINER/mult
+** create a branch to add your new feature
+ : git checkout -b cla-parsing
+** make changes to the file of your choosing to add support for command line arguments.
+** add and commit your changes with an appropriate commit message
+** fix any bugs you find, but make sure each fix is a separate commit
+** push your changes, still on your new branch, to UPSTREAM
+ : git push UPSTREAM cla-parsing
+* Procedure - CONTRIBUTOR
+** email =MAINTAINER= to request they pull your changes
+ - include =FORKURL=
+ - include branch name with new feature
+ - include brief description of what changes you made
+ 
+* Procedure - MAINTAINER
+ - receive email from =CONTRIBUTOR=
+ - pull changes into a new branch of your repo
+ : git checkout -b CONTRIBUTOR-newfeature
+ : git pull FORKURL cla-parsing
+ - test the code. Does it work as expected?
+ - inspect the code. Is it well written?
+ - inspect the commit message. Is it well formed and descriptive of the changes that were made?
+ - If there are minor problems fix them yourself.
+ - If there are major problems, reply to =CONTRIBUTOR=, request problems be fixed.
+* Procedure - MAINTAINER
+ - If the modifications look good merge them into your master branch
+ : git checkout master
+ : git merge CONTRIBUTOR-newfeature
+ - verify that =git log= shows contributions from each =CONTRIBUTOR=
+ - and push back up to your own remote origin
+ : git push origin master
+ - you may now delete the extra branches you made
+ : git branch -d CONTRIBUTOR-newfeature
+
+* Summary
+** Once everyone is done, each individual repo should 
+ - contain CLA parsing enabled mult code for all three languages.
+ - show contributions from three total contributors (including the MAINTAINER) in the log
