@@ -1,0 +1,105 @@
+#+TITLE: Regular Expressions
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Introduction
+** Recap
+*** programs that do one thing and one thing well
+*** programs that read from standard input, write to standard output
+*** combine simple programs in pipelines to perform complex tasks
+*** programs "filter" (text) data
+
+** Filtering
+*** pre-defined operatons on strings
+- =cut=
+- =sort=
+- =head=
+- =tail=
+*** user-defined operations on strings
+- =grep=
+- =sed=
+*** e.g.
+#+begin_example
+grep 'regular' Lecture-Regex-1.org
+#+end_example
+
+* Regular Expressions
+** What is Regular about Regular Expressions?
+#+begin_quote
+"regular expressions", ... are only marginally related to real regular
+expressions. Nevertheless, the term has grown with the capabilities of
+our pattern matching engines, so I'm not going to try to fight
+linguistic necessity here. I will, however, generally call them
+"regexes" - Larry Wall
+#+end_quote
+*** modern implementation of [[http://en.wikipedia.org/wiki/Regular_expression][Regular expressions]] aren't "real" [[http://en.wikipedia.org/wiki/Regular_expression#Formal_language_theory][regular expressions]]
+*** the use of regular expressions goes back to the roots of Unix
+*** The command to search for '=re=' in the =ed= editor is =g/re/p=
+** Regular Expressions
+*** mini-language
+*** concise syntax to match strings of text
+*** not as difficult as some will have you think
+** Language support
+*** Available via libraries
+**** Python
+- =import re=
+**** C++
+- =#include <regex>  //as of C++11, gcc 4.7.x=
+**** Qt/QRegExp
+*** Built in to
+- Ruby
+- Perl
+- Tcl
+
+*** Bash
+- =sed=
+- =grep=
+- =awk= (superseded by perl and now Python) 
+
+** Some examples
+*** alpha numeric characters match the literal sequence of characters
+- =foo= :: a string or substring containing 'foo'
+*** groups and ranges
+- =.= :: any character, except the new line (=\n=)
+- =[abc]= :: 'a' or 'b' or 'c'
+- =[^abc]= :: not 'a', 'b' or 'c'
+- =[c-x]= :: letters 'c' through 'x'
+- =(...)= :: group
+- =\n= :: /n/th group
+*** Character classes
+- =\s=, =\S= :: whitespace, not whitespace
+- =\d=, =\D= :: digit, not a digit
+- =\w=, =\W= :: word, not a word (single character!)
+*** Anchors
+- =^=, =$= :: beginning, end of line (like in =vim=!)
+- =\b=, =\B= :: word boundary, not a word boundary
+- =foo\b= :: match a word 'foo' but not 'foobar'
+** Not to be confused with globbing
+*** The shell performs pattern matching (globbing)
+*** limited syntax
+*** subtle differences
+- =.=
+- =*=
+
+** Examples
+*** filtering data with =grep=
+*** batch text editing with =sed=
+*** man/vim searches
+
+	       
+** With great power...
+- http://www.xkcd.com/208/
+- bookmark a [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/][cheat sheet]] 

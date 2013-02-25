@@ -1,0 +1,10 @@
+grep 'MHz' /proc/cpuinfo
+grep -E 'cpu' /proc/cpuinfo
+grep -E 'cpu\b' /proc/cpuinfo
+grep -E 'cpu\b|cache' /proc/cpuinfo | sed 's/[0-9]/X/g'
+grep -E 'cpu\b|cache' /proc/cpuinfo | sed -r 's/[0-9]+/X/g'
+grep -E '([a-z])\1' Lecture-Regex-1.org
+
+# man page/vim search
+/^\s+-l
+/^\s+-\w\b
