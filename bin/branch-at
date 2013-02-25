@@ -7,7 +7,7 @@ else
     branch_name="$1"
 fi
 
-if ! is_repo ; then
+if ! is-repo ; then
     echo "Not a valid git repo" >&2
     exit 1
 fi
