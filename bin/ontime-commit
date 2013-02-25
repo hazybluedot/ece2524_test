@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# run from within a git repo.  given DATE as a CLA, returns the commit
+# ID made on or before DATE.
+
+if [ -z "$1" ]; then echo "Usage:
+    $(basename $0) DATE" >&2
+    exit 1
+fi
+
+if ! is_repo; then
+    echo "Not a valid git repo" >&2
+    exit 1
+fi
+
+duedate=$(date --date="$1" +'%s')
+
+while read logstr; do
+      ct=$(echo $logstr | cut -d ' ' -f 2)
+      if [ "$ct" -le "$duedate" ]; then
+      	 echo "$logstr"
+	 break;
+      fi
+done < <( git log --full-history --pretty="format:%H %ct %ce" | sort -r -k 2 )
