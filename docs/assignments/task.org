@@ -1,0 +1,198 @@
+#+TITLE Task
+
+* Introduction
+In this project you will work in groups of two to build a command line
+based task manager, or "todo" list, written in Python.  Like the
+previous assignment this project is broken up into a series of smaller
+steps.
+
+* Git
+** Initialize
+Initialize a new repository named =task=:
+#+begin_example
+$ git init task
+$ cd task
+$ git remote add origin ece2524git@ece2524.ece.vt.edu:assignments/GITUSER/task.git
+#+end_example
+or clone an empty repo with the remote already set
+#+begin_example
+$ git clone ece2524git@ece2524.ece.vt.edu:assignments/GITUSER/task.git
+$ cd task
+#+end_example
+(In either case, replace 'GITUSER' with your git user name, the same you have used in the past to submit homeworks).
+
+You may also wish to add a remote for your partner's repo for easy merging
+#+begin_example
+$ git remote add CONTRIBUTOR ece2524git@ece2524.ece.vt.edu:assignments/CONTRIBUTOR/task.git
+#+end_example
+replacing 'CONTRIBUTOR' with the git user name of your partner. You can do this step later if you haven't found a partner yet.
+
+Create an empty =README= file and add it to your master branch.
+#+begin_example
+$ touch README
+$ git add README
+$ git commit -m "initial commit"
+#+end_example
+
+Since you will primarily be working in your 'development' branch, create and switch to it now:
+ #+begin_example
+ $ git checkout -b development
+ $ git branch
+ * development
+   master
+ $
+#+end_example
+
+** Work-flow
+*** Development
+- work in a branch called 'development'
+- choose one MAINTAINER
+- each person create a branch called OTHER-development, replace 'OTHER' with the git username of your group member
+- periodically merge changes from your group members 'development' branch into your local OTHER-development
+  #+begin_example
+  $ git checkout OTHER-development
+  $ git pull CONTRIBURL development
+  #+end_example
+- Merge changes into your local development branch:
+  #+begin_example
+  $ git checkout development
+  $ git merge OTHER-development
+  #+end_example
+
+- review changes and then
+  #+begin_example
+  $ git checkout development
+  $ git merge OTHER-development
+  #+end_example
+- resolve any merge conflicts and continue working in your 'development' branch.
+*** Release
+When you are ready for a release (part 1, part 2, etc.):
+- each CONTRIBUTOR: ensure that your 'development' branch is up to date and pushed to the remote server 
+- MAINTAINER: pull in development branch of each CONTRIBUTOR, merge changes into local 'development' branch.
+- test, test and then test some more
+- if tests pass then
+  #+begin_example
+  $ git checkout master
+  $ git merge development
+  $ git push origin master
+  #+end_example
+
+* Assignments
+** Define a Data Format
+/Due: February 27 at 6pm/
+
+There is no coding required for this part of the assignment, instead
+you will submit a written response in your =README= file in your
+project directory.
+
+Review [[http://www.catb.org/esr/writings/taoup/html/ch05s02.html][Section 5.2]] of The Art of Unix Programming: you will be
+designing your own textual data format for this assignment.  You may
+use [[https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format][todo.txt]] for inspiration or imitation, but in either case you must
+describe the format in your own =README= (in fact, you may want to
+checkout the full [[https://github.com/ginatrapani/todo.txt-cli][todo.txt]] project and play around with it to get a
+sense of how your completed task manager will work.  Also notice that
+it is implemented as a bash script.  See, real projects do use bash
+;-) ).
+
+All user data for your task list will be stored in a file called
+=todo.txt=, by default the program will look for =todo.txt= in the
+current directory.
+
+In addition to a brief description tasks should be able to handle the following pieces of meta data:
+- projects :: a task may be assigned to zero or more projects (e.g. final\_project, ece2524\_homework)
+- contexts :: a task may be assigned to zero or more contexts (e.g. home, work, computer, phone)
+- priorities :: a task may be assigned an optional priority level
+- due dates :: a task may be assigned an optional due date
+- completion date :: a task may have a completion date associated with it
+
+In a file named =README= in your project root describe the data format
+you will use to store todo items. Be specific: is meta data is
+required to be in a specific order? How will each piece of meta data
+be represented? What are the formatting rules?
+
+Create an empty file named =task.py=, add and commit it to your development branch.
+#+begin_example
+$ touch task.py
+$ git add task.py
+$ git commit -m "add empty task.py"
+#+end_example
+
+Suggested work-flow: talk about the data format with your partner, but pick one person to create the =README= and anther to create the empty =task.py= file.  Then merge each others changes into your local 'development' branch.  Pick one person to be the designated MAINTAINER.  The MAINTAINER will be responsible for merging releases into their master branch and pushing their master branch to the remote.
+
+*** Submission
+MAINTAINER:
+- merge in any changes from CONTRIBUTOR
+  #+begin_example
+  $ git checkout CONTRIBUTOR-development # add a -b after checkout if you have not created this branch yet
+  $ git pull CONTRIBUTOR
+  $ git checkout development
+  $ git merge CONTRIBUTOR-development
+  #+end_example
+- Once everything looks good, make a release commit in the master branch
+  #+begin_example
+$ git checkout master
+$ git merge development
+$ git log # confirm that both group members show up in the log
+$ git push origin master
+#+end_example
+
+** add/list
+/Due: March 6 at 9:05am/
+
+Implement add and list commands.
+
+#+begin_example
+$ task add "buy milk" # accept optional meta data in a format of your choosing
+$ task add "finish homework"
+$ task list
+1. buy milk           # display any meta data in a format of your choosing
+2. finish homework
+$
+#+end_example
+
+The list command should accept zero or more arguments that are used to
+filter by context, project or priority.  The logical affect of
+multiple filter arguments no the output shall be a logical 'AND',
+e.g. if the user indicates to filter by priority 1 and project
+'ece2524\_homework' then the program shall list only the items in the
+'ece2524\_homework' project with priority 1.
+
+Suggested work-flow: assign implementation of the "add" and "list"
+command to separate group members.  If you have agreed on a data
+format these parts should be orthogonal, i.e. changes to the "add"
+code should not affect the "list" code and vice versa.
+
+** sort by
+/Due: March 20 at 9:05am/
+
+TODO
+
+** done/update
+/Due: March 27 at 9:05am/
+
+TODO
+
+* Grading
+|             | *0*                         | *1*              | *2*                  | *3*                      |
+|-------------+-----------------------------+------------------+----------------------+--------------------------|
+| *function*  | does not run                | runs but crashes | no unhandled errors, | meets every defined spec |
+|             | or exits immediately        | or error on      | but some features    |                          |
+|             | with error                  | some conditions  | not implemented      |                          |
+|-------------+-----------------------------+------------------+----------------------+--------------------------|
+| *style*     | inconsistent indenting or   | ...              | ...                  | consistent               |
+|             | variable naming             |                  |                      | easy to read             |
+|             | too many comments           |                  |                      | free of clutter          |
+|             | or unnecessary clutter      |                  |                      |                          |
+|-------------+-----------------------------+------------------+----------------------+--------------------------|
+| *structure* | a lot of repeated code,     | ...              | ...                  | orthogonal functions     |
+|             | or bloated functions        |                  |                      | use of language-specific |
+|             |                             |                  |                      | idioms where appropriate |
+|             |                             |                  |                      |                          |
+|-------------+-----------------------------+------------------+----------------------+--------------------------|
+| *git usage* | no apparent use of git      | ...              | ...                  | proper branch use        |
+|             | other than final submission |                  |                      | multi-author commits     |
+|             |                             |                  |                      | logical commits          |
+|             |                             |                  |                      | descriptive, appropriate |
+|             |                             |                  |                      | commit messages          |
+|-------------+-----------------------------+------------------+----------------------+--------------------------|
+
