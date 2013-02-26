@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: $(basename $0) BRANCH_NAME [SHA1]" >&2
+    exit 1
+else
+    branch_name="$1"
+fi
+
+if ! is-repo ; then
+    echo "Not a valid git repo" >&2
+    exit 1
+fi
+
+if grep '\b'$branch_name'\b' <( git branch ) ; then
+    echo "Error: $branch_name already exists" >&2
+    exit 1
+fi
+
+sha1=$(cut -d ' ' -f 1) 
+
+if git log $sha1 &>/dev/null; then
+    echo "Creating branch \"$branch_name\" off of $sha1" >&2
+    # git checkout $sha1
+    # git checkout -b $branch_name
+else
+    echo "Bad sha1 commit ID" >&2
+    exit 1
+fi
