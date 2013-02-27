@@ -1,7 +1,11 @@
 #!/usr/bin/env python2
 
 import sys
-import myfunctions as mf
+import myfunctions as mf # import my own module: any file with a .py
+# extension in the current directory can be imported like this
+# functions and classes in the module are accessible in the namespace
+# defined by the module name. Be sure to track any extra files needed
+# for your project with git!
 
 usage_string="""Usage: {prog} COMMAND ARGUMENT
 COMMAND may be any of {commands}
