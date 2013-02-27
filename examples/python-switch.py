@@ -1,21 +1,14 @@
 #!/usr/bin/env python2
 
 import sys
+import myfunctions as mf
 
 usage_string="""Usage: {prog} COMMAND ARGUMENT
 COMMAND may be any of {commands}
 """
 
-def function1(x):
-    "do something with x"
-    print "calling funtion 1 with x={0}".format(x)
-
-def function2(x):
-    "do something else with x "
-    print "calling function 2 with x={0}".format(x)
-
 if __name__ == '__main__': # python's way of defining the "main" function
-    option = { 'one': function1, 'two': function2 } # a dict with two items
+    option = { 'one': mf.function1, 'two': mf.function2 } # a dict with two items
     
     try:
         myname, command, argument = sys.argv

@@ -1,0 +1,12 @@
+# phone numbers
+540-555-1234   # should match
+978 555 1234   # should match
+1235551234     # should match
+(540) 555-2345 # should match
+(540 555-2345  # or
+540) 555-2345  # ok to match, but if you get the rest working, try to modify your regex to eliminate this case
+12345678901    # should not match
+540-5551234    # should not match
+540.555-1234   # should not match
+
+
