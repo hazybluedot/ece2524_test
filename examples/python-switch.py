@@ -24,9 +24,16 @@ if __name__ == '__main__': # python's way of defining the "main" function
         sys.exit(1)
 
     try:
-       option[command](argument)
+        option[command](argument) # using the command we read as a CLA
+        # as the key to our dict if the key exists, the returned value
+        # will be a callable object, so we can call it with the
+        # (argument) syntax
     except KeyError as e:
-       sys.stderr.write("I did not understand the command: {0}\n".format(command))
-       sys.exit(1)
+        # if the command we read as a CLA is not a key in our dict,
+        # then python will throw a KeyError exception when we try to
+        # access it
+        sys.stderr.write("I did not understand the command: {0}\n".format(command))
+        sys.exit(1)
 
     sys.stdout.write("Done\n")
+    # by default, exit with status code 0 (success)
