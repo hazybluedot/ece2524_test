@@ -29,5 +29,15 @@ if __name__ == '__main__':
         if three_letter_word_that_ends_in_t(line):
             sys.stdout.write("{line}: FSM matched!\n".format(line=line.strip()))
 
-        if re.match('..t', line):
+        if re.match(r'..t\b', line):
             sys.stdout.write("{line}: regex matched!\n".format(line=line.strip()))
+
+        words1 = re.findall(r'\s*(\w+)\s*', line)
+        words2 = line.split()
+        if len(words1) > 1 or len(words2) > 2:
+            sys.stdout.write("split words with regex: {list}\n".format(list=words1))
+            sys.stdout.write("split words with split: {list}\n".format(list=words2))
+
+        ## What if you wanted to get a list of all three letter words that ended in 't'?
+        twords = re.findall(r'\b..t\b', line)
+        sys.stdout.write("three letter words that end in 't': {list}\n".format(list=twords))
