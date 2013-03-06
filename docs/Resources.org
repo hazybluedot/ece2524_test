@@ -1,0 +1,42 @@
+#+TITLE: Resources
+
+* =git=
+** Repos of note
+- ece2524git@ece2524.ece.vt.edu:ece2524.git :: source for all published class material, example files and programs
+- ece2524git@ece2524.ece.vt.edu:assignments/CREATOR/mult.git :: remote for your mult assignment submission.  Replace =CREATOR= with your git username.
+- ece2524git@ece2524.ece.vt.edu:solutions/mult.git :: solutions to the 'mult' assignment.  Parts 1-3 are [[http://git-scm.com/book/en/Git-Basics-Tagging][tagged]], run =git tag= to see a list of tags, checkout one of interest.
+- ece2524git@ece2524.ece.vt.edu:assignments/CREATOR/task.git :: remote for your task assignment submission. Replace =CREATOR= with your git username.
+- ece2524git@ece2524.ece.vt.edu:inclass/CREATOR/REPO.git :: template for inclass exercise submission, replace =CREATOR= with your git username and =REPO= with the proived name for the particular exercise.
+
+** Learning/Practice
+- [[http://pcottle.github.com/learnGitBranching/]] :: visual, real-time manipulation of a git tree. Use to gain an intuitive feel for branching and merging.
+
+** Documentation
+- http://git-scm.com/documentation
+
+* =tmux=
+** creating or attaching a session
+- tmux new -s chat :: start a new session named 'chat'
+- tmux a :: attach to a running session
+- tmux a -t chat :: attach to a running session named 'chat' (becomes useful when you have multiple sessions running at once!)
+** from within a running session
+Tmux uses a /prefix/ key combination to tell it to interpret the next character you type as a command rather than send it to the terminal.  By default this prefix is =Ctrl+b= but many people remap it to =Ctrl+a= both because it is less awkward to type and because they might be coming from a history of using =screen= which used =Ctrl+a= as its prefix.  Here I will just use /prefix/, just replace it with whichever prefix you are using. 
+
+- /prefix/ c :: create a new window
+- /prefix/ " :: split pane vertically
+- /prefix/ % :: split pane horizontally
+- /prefix/ o :: cycle to *o*ther pane
+- /prefix/ ? :: show current key bindings ('q' to quit) 
+- /prefix/ d :: detatch from a running session, drops you back to a naked prompt
+ 
+Note the 'Ctrl' key is only held down for the /prefix/, then released and the command letter is typed separately. Some commands, however will also use the Control key, shown as =C= in the online help. For instance
+
+- /prefix/ C-o :: rotate-window
+
+If your /prefix was the default 'Ctrl+b' then to call the 'rotate-window' command you would press 'Ctrl+b' followed by 'Ctrl+o', so you could keep the 'Ctrl' key pressed for the entire sequence.
+
+For more, a whole lot more, [[http://blog.hawkhost.com/2010/06/28/tmux-the-terminal-multiplexer/][Hawk Host Blog - TMUX]] is a good place to start. 
+
+* Regular Expressions (regex)
+- [[http://www.debuggex.com/]] :: a super cool visual debugger. Do note the unsupported features to avoid frustration with regexs that "should work"
+- [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/][cheat sheet]] (also available as a [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/pdf/][PDF]])
