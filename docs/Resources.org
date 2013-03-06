@@ -1,0 +1,19 @@
+#+TITLE: Resources
+
+* git
+** Repos of note
+- ece2524git@ece2524.ece.vt.edu:ece2524.git :: source for all published class material, example files and programs
+- ece2524git@ece2524.ece.vt.edu:assignments/CREATOR/mult.git :: remote for your mult assignment submission.  Replace =CREATOR= with your git username.
+- ece2524git@ece2524.ece.vt.edu:solutions/mult.git :: solutions to the 'mult' assignment.  Parts 1-3 are [[http://git-scm.com/book/en/Git-Basics-Tagging][tagged]], run =git tag= to see a list of tags, checkout one of interest.
+- ece2524git@ece2524.ece.vt.edu:assignments/CREATOR/task.git :: remote for your task assignment submission. Replace =CREATOR= with your git username.
+- ece2524git@ece2524.ece.vt.edu:inclass/CREATOR/REPO.git :: template for inclass exercise submission, replace =CREATOR= with your git username and =REPO= with the proived name for the particular exercise.
+
+** Learning/Practice
+- [[http://pcottle.github.com/learnGitBranching/]] :: visual, real-time manipulation of a git tree. Use to gain an intuitive feel for branching and merging.
+
+** Documentation
+- http://git-scm.com/documentation
+
+* Regular Expressions (regex)
+- [[http://www.debuggex.com/]] :: a super cool visual debugger. Do note the unsupported features to avoid frustration with regexs that "should work"
+- [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/][cheat sheet]] (also available as a [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/pdf/][PDF]])
