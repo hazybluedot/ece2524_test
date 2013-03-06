@@ -139,7 +139,7 @@ $ git push origin master
 ** add/list
 /Due: March 6 at 9:05am/
 
-Implement add and list commands.
+Implement add and list commands. For this part you may assume the =todo.txt= file already exists (i.e. Python just needs to open it, no need to create it first).
 
 #+begin_example
 $ task add "buy milk" # accept optional meta data in a format of your choosing
@@ -150,27 +150,58 @@ $ task list
 $
 #+end_example
 
-The list command should accept zero or more arguments that are used to
-filter by context, project or priority.  The logical affect of
-multiple filter arguments no the output shall be a logical 'AND',
-e.g. if the user indicates to filter by priority 1 and project
-'ece2524\_homework' then the program shall list only the items in the
-'ece2524\_homework' project with priority 1.
+The list command will eventually accept zero or more arguments used to
+filter by context, project or priority, but for this stage only a
+simple 'list' functionality is needed. Note that the numbering is not
+part of the data file itself, the list command should add numbering to
+the output to aid the user in selecting specific tasks to modify with
+later commands.
 
 Suggested work-flow: assign implementation of the "add" and "list"
 command to separate group members.  If you have agreed on a data
 format these parts should be orthogonal, i.e. changes to the "add"
 code should not affect the "list" code and vice versa.
 
-** sort by
+** sort/filter/completed
 /Due: March 20 at 9:05am/
+/DRAFT/
 
-TODO
+*** create first
+If =todo.txt= does not exist then it shall be created.
 
-** done/update
-/Due: March 27 at 9:05am/
+*** list filtering
+- add filtering capability to the 'list' command, making use of your own data format.  For example, assuming a todo.txt inspired format
 
-TODO
+#+BEGIN_EXAMPLE
+$ task list '+ece2524'
+#+END_EXAMPLE
+
+would list all tasks in the 'ece2524' project.  Additional filtering parameters should be 'AND'ed, i.e.
+
+#+BEGIN_EXAMPLE
+$ task list '+ece2524' '@computer'
+#+END_EXAMPLE
+
+should list all tasks that are in the 'ece2524' project and 'computer' context.
+
+*Note:* filtering the list should /not/ modify the underlying file storing the task list: it is just a different view of the same data.
+
+*** sorting
+by default, output lists should be sorted by priority, then dates.
+
+*** complete
+
+add a 'complete' command that will mark a given task as complete.  Completed tasks shall not be displayed 
+#+BEGIN_EXAMPLE
+$ task complete 2
+#+END_EXAMPLE
+
+
+*** extra credit
+
+by default when listing items, filter only dates in the future, compared to the current time the program is run.  
+
+
 
 * Grading
 |             | *0*                         | *1*              | *2*                  | *3*                      |
