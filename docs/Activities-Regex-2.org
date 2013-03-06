@@ -1,0 +1,42 @@
+#+TITLE: Regular Expressions
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Potential topics
+** [[http://www.catb.org/esr/writings/taoup/html/ch08s01.html][Understanding the Taxonomy of Languages]]
+** minilanguages: power vs complexity
+
+[[file:assets/regular_expressions.org]]
+
+* Continue exercises
+** regex and filtering
+- continue work on =phonefilter= implementation using =grep=, =sed= in a bash script
+- implement =tagfilter= in python: print all words read from /standard
+  in/ preceeded by '+', one per line
+#+begin_example
+$ ./tagfilter.py < lorem_ipsum.txt
+#+end_example
+*** Python tips							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+#+begin_src python
+a = ['first','second'] # a list of strings
+a = a + b # concatinate list b with list a
+a += b    # same
+m = re.findall(pattern, string) 
+# return a list 'm' of all matches of 'pattern' in 'string'
+#+end_src
