@@ -31,3 +31,9 @@ if __name__ == '__main__':
 
         if re.match('..t', line):
             sys.stdout.write("{line}: regex matched!\n".format(line=line.strip()))
+
+        words1 = re.findall(r'\s*(\w+)\s*', line)
+        words2 = line.split()
+        if len(words1) > 1 or len(words2) > 2:
+            sys.stdout.write("split words with regex: {list}\n".format(list=words1))
+            sys.stdout.write("split words with split: {list}\n".format(list=words2))
