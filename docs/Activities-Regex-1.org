@@ -1,0 +1,72 @@
+#+TITLE: Fun With Regular Expressions
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Python hints
+** Python hints
+*** Use functions
+- covered in [[http://learnpythonthehardway.org/book/ex18.html][Exercises 18]]-[[http://learnpythonthehardway.org/book/ex20.html][20]] in Learn Python the Hard Way
+*** Dictionaries are awesome
+- containers of key/value pairs (a hash, or associative array in some
+  languages, a map in C++) are called dictionaries in Python
+- For whatever reason, dictionaries are not introduced until [[http://learnpythonthehardway.org/book/ex39.html][Exercise 39]] in LPTHW.
+- keys and values in a Python dict can be any valid Python type, even
+  callable objects, consider the example in
+  =ece2524/examples/python-switch.py= and run it with the following
+  arguments:
+** A Pythonic switch
+*** no "case" or "switch" statement
+#+begin_example
+$ ./python-switch.py one "hello world"
+$ ./python-switch.py two "hello world"
+$ ./python-switch.py three "hello world"
+#+end_example
+*** each of the commands you will be implementing for 'task' can (and
+  possibly should) be thought of and treated as separate entities.
+*** you may even choose to group functions for each command into separate files.  You can then load files as modules.
+
+* Fun with Regular Expressions
+** Regex Resources
+- [[http://www.debuggex.com/?re=&str=][Debuggex]] - an interactive, visual regex debugger and playground
+- [[http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/][cheat sheet]] (one of many)
+
+** Exercise
+- match something that looks like a phone number: a sequence of 10 digits split by nothing, spaces or dashes:
+  #+begin_example
+555-123-4567   # match
+1234567890     # match
+(555) 540-1234 # match
+#+end_example 
+- see =examples/regex_data= for more sample input
+
+1. create a new git repo (use remote path inclass/CREATOR/regex1.git, replace CREATOR with your git user name)
+2. create a file called =phonefilter=, write your commands in that file so that it can be executed as a bash script
+
+** Exercise
+3. Start by writing a grep command that will match only the phone numbers in =regex_data= that are labeled "should match"
+4. pipe the output of the previous command through a sed substitution expression that formats matched phone numbers to look like
+  #+begin_example
++1-540-555-1234
++1-978-555-1234
++1-123-555-1234
+#+end_example
+   ( the comments =# should match= will still be part of the output at this point)
+5. pipe the output of the previous command through another command that strips away the comments starting with '#' leaving just a list of phone numbers
+
+** Exercise
+- add/commit your changes
+- add/commit an =AUTHORS= file that lists pids of group members, one per line
+- push to the remote repo path =inclass/CREATOR/regex1.git=
