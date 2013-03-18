@@ -15,10 +15,16 @@ fi
 
 duedate=$(date --date="$1" +'%s')
 
+ontime=""
 while read logstr; do
       ct=$(echo $logstr | cut -d ' ' -f 2)
       if [ "$ct" -le "$duedate" ]; then
-      	 echo "$logstr"
+      	 ontime="$logstr"
 	 break;
       fi
 done < <( git log --full-history --pretty="format:%H %ct %ce" | sort -r -k 2 )
+if [ ! -z "$ontime" ]; then
+    echo "$ontime"
+else
+    echo "No commit earlier than $1" >&2
+fi
