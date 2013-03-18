@@ -1,4 +1,4 @@
-#~/bin/bash
+#!/usr/bin/env bash
 
 # cd $GITOLITE_ADMIN_DIR
 
@@ -16,11 +16,12 @@ while read GITNAME; do
     pushd $(realpath ".")
     if [ -d "$REPO_DIR" ]; then
 	cd $REPO_DIR
+	git checkout master 2>/dev/null
 	git pull
     else
-	git clone "$REPO_PATH" $REPO_DIR
+	git clone "$REPO_PATH" $REPO_DIR 2>/dev/null
 	if [ $? -ne 0 ]; then
-	    echo "error: $REPO_DIR" >&2
+	    echo "$GITNAME" >&2
 	fi
     fi
     popd

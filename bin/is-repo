@@ -1,4 +1,4 @@
 #!/bin/sh
 
-git status &>/dev/null
+git --git-dir=.git status &>/dev/null
 exit $?
