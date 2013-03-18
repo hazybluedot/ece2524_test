@@ -17,28 +17,48 @@
 
 * Looking ahead
 ** Schedule
-*** this week: Highlevel summary, more with python/regex, task assignment due
+*** this week: High-level concepts, more with python/regex, task assignment due
 *** 3/25, 3/27: Review, Midterm
 *** 4/1, 4/3: Automating build tasks with Makefiles 
 
 * Concepts
-** Fancy Words 
-*** Orthogonal
-- geometry
-- statistics
-- programming
-*** Idiom
-- spoken language
-- programming language
+** Some Words on Some Words
+- orthogonal :: 
+  1. Relating to or involving right angles; at right angles (to something else).
+  2. /Math/. Of a linear transformation of a vector space: preserving lengths and angles; leaving unchanged the inner product of any two vectors.
+  3. /Statistics/. Of a set of variates: statistically independent. Of an experimental design: such that the variates under investigation can be treated as statistically independent. 
+  4. /Programming/. ...
+
+** Some Words on Some Words
+- idiom ::
+  1. /language/  A form of expression, grammatical construction, phrase, etc., used in a distinctive way in a particular language, dialect, or language variety; spec. a group of words established by usage as having a meaning not deducible from the meanings of the individual words.
+  2. /programming/ ...
+
+** Some Words on Some Words 
+- art :: 
+  1. Skill; its display, application, or expression.
+  2. /Programming/ ...
 
 ** Examples
+*** different languages have different
+- vocabulary
+- grammar/syntax
+- idioms
+
+*** direct translation doesn't always provide best results
+- /piece of cake/
+- /hit the nail on the head/
+- /hit the books/
+
 #+BEGIN_EXAMPLE
 $ examples/bepythonic.py
 $ examples/python-switch.py
 #+END_EXAMPLE
 
+*** learning a new language (vocabulary, syntax) is easy, but fluency takes time and practice
+
 ** Working with Lists
-*** things that act like lists
+*** Iterating over structured data
 #+BEGIN_EXAMPLE
 $ examples/read_records.py
 #+END_EXAMPLE
@@ -46,20 +66,28 @@ $ examples/read_records.py
 #+BEGIN_EXAMPLE
 $ examples/read_records_gen.py
 #+END_EXAMPLE
+- google 'python generator function'
 
 *** List comprehension
+$S_N = \{ x^2 | x \in \mathbb{N}, x < N \}$
+#+begin_src python
+squares_N=[ x**2 for x in range(1,N+1) ]
+#+end_src
+
 #+BEGIN_EXAMPLE
 $ examples/list_comprehension.py
 #+END_EXAMPLE
 
-* A Closer Look at task.py
+* Logic vs. Data
 ** arguments vs. structured data
 #+BEGIN_EXAMPLE
-$ ./task.py add "finish homework" --priority A --project ece2524 --due '2013-03-25'"
+$ ./task.py add "finish homework" --priority A \
+ --project ece2524 --due '2013-03-25'"
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-$ ./task.py add "(A) finish homework +ece2524 due:2013-03-25"
+$ ./task.py add "(A) finish homework +ece2524 \
+ due:2013-03-25"
 #+END_EXAMPLE
 
 ** arguments vs. structured data
@@ -73,8 +101,8 @@ $ ./task.py list '+ece2524'
 
 ** Rule of Representation
 #+BEGIN_QUOTE
-Fold knowledge into data, so program logic can be stupid and robust.
+Fold knowledge into data, so program logic can be stupid and robust. -[[http://www.catb.org/esr/writings/taoup/html/ch01s06.html#id2878263][Raymond, \S 1.6]]
 #+END_QUOTE
 
-*** How does this help?
+*** Trade offs?
 
