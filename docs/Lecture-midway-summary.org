@@ -34,6 +34,7 @@
 ** Examples
 #+BEGIN_EXAMPLE
 $ examples/bepythonic.py
+$ examples/python-switch.py
 #+END_EXAMPLE
 
 ** Working with Lists
