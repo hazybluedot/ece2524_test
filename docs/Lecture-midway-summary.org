@@ -1,0 +1,79 @@
+#+TITLE: Midway Summary
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Looking ahead
+** Schedule
+*** this week: Highlevel summary, more with python/regex, task assignment due
+*** 3/25, 3/27: Review, Midterm
+*** 4/1, 4/3: Automating build tasks with Makefiles 
+
+* Concepts
+** Fancy Words 
+*** Orthogonal
+- geometry
+- statistics
+- programming
+*** Idiom
+- spoken language
+- programming language
+
+** Examples
+#+BEGIN_EXAMPLE
+$ examples/bepythonic.py
+#+END_EXAMPLE
+
+** Working with Lists
+*** things that act like lists
+#+BEGIN_EXAMPLE
+$ examples/read_records.py
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ examples/read_records_gen.py
+#+END_EXAMPLE
+
+*** List comprehension
+#+BEGIN_EXAMPLE
+$ examples/list_comprehension.py
+#+END_EXAMPLE
+
+* A Closer Look at task.py
+** arguments vs. structured data
+#+BEGIN_EXAMPLE
+$ ./task.py add "finish homework" --priority A --project ece2524 --due '2013-03-25'"
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ ./task.py add "(A) finish homework +ece2524 due:2013-03-25"
+#+END_EXAMPLE
+
+** arguments vs. structured data
+#+BEGIN_EXAMPLE
+$ ./task.py list --project ece2524
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ ./task.py list '+ece2524'
+#+END_EXAMPLE
+
+** Rule of Representation
+#+BEGIN_QUOTE
+Fold knowledge into data, so program logic can be stupid and robust.
+#+END_QUOTE
+
+*** How does this help?
+
