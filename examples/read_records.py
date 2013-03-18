@@ -5,7 +5,10 @@ if __name__ == '__main__':
     record = {}
     for line in sys.stdin:
         if line.startswith('%%'):
-            print "record: {0}".format(record)
+            print "\"{title}\" by {author}, {date}".format(
+                title=record['title'], 
+                author=record['author'], 
+                date=record['published'])
             record = {}
         else:
             key,part,value=line.partition(':')
