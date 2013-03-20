@@ -16,7 +16,7 @@ print "ranged loops are cleaner and less prone to bugs"
 for arg in argv:
     print "arg: {0}".format(arg)
 
-## Note: the 'pythonic' solution used 2 lines of code instead of one, and didn't define an extra, unneeded variable.
+## Note: the 'pythonic' solution used 2 lines of code instead of four, and didn't define an extra, unneeded variable.
 ## The most common source of bugs in C/C++ code are mis-used iterator variables, e.g. iterating past the end of an array,
 ## forgetting to increment an iterator variable, etc.
 
