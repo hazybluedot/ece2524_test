@@ -1,15 +1,18 @@
 #!/bin/sh
 
-GITUSER=rflowers
+git_user=rflowers
 
 if [ -z "$1" ]; then
-     	REPO="practice1"
+     	base_repo="midterm/practice"
 else
-	REPO="$1"
+	base_repo="$1"
 fi
 
-BASEREPO='midterm/practice'
-REPO=$GITUSER/midterm/$REPO
+if [ -z "$2" ]; then
+	postfix="$2"
+fi
 
-ssh ece2524git@ece2524.ece.vt.edu fork $BASEREPO $REPO
-git clone ece2524git@ece2524.ece.vt.edu:$REPO
+repo=$git_user/${base_repo}${postfix}
+
+ssh ece2524git@ece2524.ece.vt.edu fork $base_repo $repo
+git clone ece2524git@ece2524.ece.vt.edu:$repo
