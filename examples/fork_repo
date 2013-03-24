@@ -2,10 +2,11 @@
 
 git_user=rflowers
 
-if [ -z "$1" ]; then
-     	base_repo="midterm/practice"
+if [ "$#" -lt 2 ]; then
+	echo "Usage: $(basename $0) GITUSER REPO [NUMBER]"
 else
-	base_repo="$1"
+	git_user="$1"
+	base_repo="$2"
 fi
 
 if [ -n "$2" ]; then
