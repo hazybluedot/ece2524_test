@@ -1,3 +1,5 @@
+#!/bin/sh
+
 GITUSER=rflowers
 
 if [ -z "$1" ]; then
