@@ -1,0 +1,13 @@
+GITUSER=rflowers
+
+if [ -z "$1" ]; then
+     	REPO="practice1"
+else
+	REPO="$1"
+fi
+
+BASEREPO='midterm/practice'
+REPO=$GITUSER/midterm/$REPO
+
+ssh ece2524git@ece2524.ece.vt.edu fork $BASEREPO $REPO
+git clone ece2524git@ece2524.ece.vt.edu:$REPO
