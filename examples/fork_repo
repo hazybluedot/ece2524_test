@@ -4,6 +4,7 @@ git_user=rflowers
 
 if [ "$#" -lt 2 ]; then
 	echo "Usage: $(basename $0) GITUSER REPO [NUMBER]"
+	exit 1
 else
 	git_user="$1"
 	base_repo="$2"
