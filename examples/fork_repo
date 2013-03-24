@@ -10,8 +10,8 @@ else
 	base_repo="$2"
 fi
 
-if [ -n "$2" ]; then
-	postfix="$2"
+if [ -n "$3" ]; then
+	postfix="$3"
 fi
 
 repo=$git_user/${base_repo}${postfix}
