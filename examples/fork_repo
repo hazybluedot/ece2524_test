@@ -8,7 +8,7 @@ else
 	base_repo="$1"
 fi
 
-if [ -z "$2" ]; then
+if [ -n "$2" ]; then
 	postfix="$2"
 fi
 
