@@ -39,5 +39,6 @@ if __name__ == '__main__':
             sys.stdout.write("split words with split: {list}\n".format(list=words2))
 
         ## What if you wanted to get a list of all three letter words that ended in 't'?
-        twords = re.findall(r'\b..t\b', line)
-        sys.stdout.write("three letter words that end in 't': {list}\n".format(list=twords))
+        if len(words1) > 1 or len(words2) > 1:
+            twords = re.findall(r'\b..t\b', line)
+            sys.stdout.write("three letter words that end in 't': {list}\n".format(list=twords))
