@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ ! -z "$1" ]; then
+    check_branch="$1"
+fi
+
+while read userdir; do
+    pushd .
+    cd $userdir
+    if [ -n "$check_branch" ]; then
+	test $(git rev-parse --abbrev-ref HEAD) = "$check_branch" || ( echo "not on $check_branch" >&2; continue )
+    fi
+    git add output/*
+    git add diffs/*
+    git add doc/*
+    git commit -m "auto commit"
+    popd
+done
