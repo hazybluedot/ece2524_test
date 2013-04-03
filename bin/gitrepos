@@ -9,10 +9,16 @@ else
     BASENAME="$1"
 fi
 
+if [ -n "$2" ]; then
+    DESTBASE="$2"
+fi
+
 while read GITNAME; do
     REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
     REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
-
+    if [ -n "$DESTBASE" ]; then
+	REPO_DIR=$(echo $DESTBASE | sed s/CREATOR/$GITNAME/g)
+    fi
     pushd $(realpath ".")
     if [ -d "$REPO_DIR" ]; then
 	cd $REPO_DIR
