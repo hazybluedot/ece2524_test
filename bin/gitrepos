@@ -1,4 +1,4 @@
-#~/bin/bash
+#!/usr/bin/env bash
 
 # cd $GITOLITE_ADMIN_DIR
 
@@ -9,18 +9,25 @@ else
     BASENAME="$1"
 fi
 
+if [ -n "$2" ]; then
+    DESTBASE="$2"
+fi
+
 while read GITNAME; do
     REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
     REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
-
+    if [ -n "$DESTBASE" ]; then
+	REPO_DIR=$(echo $DESTBASE | sed s/CREATOR/$GITNAME/g)
+    fi
     pushd $(realpath ".")
     if [ -d "$REPO_DIR" ]; then
 	cd $REPO_DIR
+	git checkout master 2>/dev/null
 	git pull
     else
-	git clone "$REPO_PATH" $REPO_DIR
+	git clone "$REPO_PATH" $REPO_DIR 2>/dev/null
 	if [ $? -ne 0 ]; then
-	    echo "error: $REPO_DIR" >&2
+	    echo "$GITNAME" >&2
 	fi
     fi
     popd

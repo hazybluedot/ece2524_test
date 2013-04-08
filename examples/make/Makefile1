@@ -1,0 +1,15 @@
+objects := main.o accumulator.o
+libs := -lboost_program_options
+
+all: acctest
+
+acctest: $(objects)
+	g++ -o $@ $^ $(libs)
+
+%.o: %.cc
+	g++ -c -MMD -o $@ $<
+
+-include $(objects:.o=.d)
+
+clean:
+	rm -f *.o *.d

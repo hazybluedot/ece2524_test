@@ -139,7 +139,7 @@ $ git push origin master
 ** add/list
 /Due: March 6 at 9:05am/
 
-Implement add and list commands.
+Implement add and list commands. For this part you may assume the =todo.txt= file already exists (i.e. Python just needs to open it, no need to create it first).
 
 #+begin_example
 $ task add "buy milk" # accept optional meta data in a format of your choosing
@@ -150,27 +150,108 @@ $ task list
 $
 #+end_example
 
-The list command should accept zero or more arguments that are used to
-filter by context, project or priority.  The logical affect of
-multiple filter arguments no the output shall be a logical 'AND',
-e.g. if the user indicates to filter by priority 1 and project
-'ece2524\_homework' then the program shall list only the items in the
-'ece2524\_homework' project with priority 1.
+The list command will eventually accept zero or more arguments used to
+filter by context, project or priority, but for this stage only a
+simple 'list' functionality is needed. Note that the numbering is not
+part of the data file itself, the list command should add numbering to
+the output to aid the user in selecting specific tasks to modify with
+later commands.
 
 Suggested work-flow: assign implementation of the "add" and "list"
 command to separate group members.  If you have agreed on a data
 format these parts should be orthogonal, i.e. changes to the "add"
 code should not affect the "list" code and vice versa.
 
-** sort by
+** sort/filter/completed
 /Due: March 20 at 9:05am/
 
-TODO
+*** create first
+If =todo.txt= does not exist then it shall be created. For the following examples I am using a =todo.txt= file that looks like:
 
-** done/update
-/Due: March 27 at 9:05am/
+#+BEGIN_EXAMPLE
+$ cat todo.txt
+(B) George Bool +reading @library
+Edification by publishment +reading @online
+Anti fragile +reading @online
+(A) Grade mult assignment +ece2524 @computer
+Walker Percy +reading
+(B) GSA Research Symposium abstract due:2013-03-15
+(A) Get nanoc site up (blogs, courses, teaching philosophy) @computer
+(B) fix gaussian mixture sampling/likelihood +simulation @computer
+(A) grade task assignment +ece2524 @computer
+$
+#+END_EXAMPLE
 
-TODO
+*** sorting
+output lists should be sorted by priority, items that have no priority should be listed after those with a priority and may appear in the order in which they exist in the data file. It is left to the developer (you) to decide whether item numbering should reflect the sorted order or the order in which items are listed in the data file (the [[https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format][todo.txt]] project does the later).
+
+#+BEGIN_EXAMPLE
+$ ./task.py list
+04 (A) Grade mult assignment +ece2524 @computer
+07 (A) Get nanoc site up (blogs, courses, teaching philosophy) @computer
+09 (A) grade task assignment +ece2524 @computer
+01 (B) George Bool +reading @library
+06 (B) GSA Research Symposium abstract due:2013-03-15
+08 (B) fix gaussian mixture sampling/likelihood +simulation @computer
+02 Edification by publishment +reading @online
+03 Anti fragile +reading @online
+05 Walker Percy +reading
+$
+#+END_EXAMPLE
+
+Notice that the numbers are no longer in order as they are associated with the individual task item (in this case they are numbered in the order the items appear in the =todo.txt= file. It is up to you how to handle task numbering, but be sure that it is consistent so that the pairing of a particular number and task item doesn't change with different views (it will of course change as items are added or removed from the list).
+
+*** list filtering
+- add filtering capability to the 'list' command, making use of your own data format.  For example, assuming a todo.txt inspired format
+
+#+BEGIN_EXAMPLE
+$ ./task.py list '+reading'
+01 (B) George Bool +reading @library
+02 Edification by publishment +reading @online
+03 Anti fragile +reading @online
+05 Walker Percy +reading
+$
+#+END_EXAMPLE
+
+would list all tasks in the 'ece2524' project.  Additional filtering parameters should be 'AND'ed, i.e.
+
+#+BEGIN_EXAMPLE
+$ ./task.py list '+reading' '@online'
+02 Edification by publishment +reading @online
+03 Anti fragile +reading @online
+$
+#+END_EXAMPLE
+
+should list all tasks that are in the 'ece2524' project and 'computer' context.
+
+*Note:* filtering the list should /not/ modify the underlying file storing the task list: it is just a different view of the same data.
+
+
+*** complete
+
+add a 'complete' command that will mark a given task as complete.  Completed tasks shall not be displayed 
+
+#+BEGIN_EXAMPLE
+$ ./task.py complete 2
+Marked task 2 as completed.
+$ ./task.py list
+03 (A) Grade mult assignment +ece2524 @computer
+06 (A) Get nanoc site up (blogs, courses, teaching philosophy) @computer
+08 (A) grade task assignment +ece2524 @computer
+01 (B) George Bool +reading @library
+05 (B) GSA Research Symposium abstract due:2013-03-15
+07 (B) fix gaussian mixture sampling/likelihood +simulation @computer
+02 Anti fragile +reading @online
+04 Walker Percy +reading
+$ 
+#+END_EXAMPLE
+
+Notice the numbers have been reassigned, the task '=Edification by publishment +reading @online=' has been removed and now '=Anti fragile +reading @online=' is task 2.
+
+*** extra credit
+
+listing items, filter by priority and then date.  Incomplete task items that have a due date that is past should appear under a separate heading called "Past Due".  
+
 
 * Grading
 |             | *0*                         | *1*              | *2*                  | *3*                      |

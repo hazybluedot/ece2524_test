@@ -16,11 +16,28 @@
 #+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
 
 * Potential topics
-** [[http://www.catb.org/esr/writings/taoup/html/ch08s01.html][Understanding the Taxonomy of Languages]]
-** minilanguages: power vs complexity
+** Domain Specific Languages 
+*** [[http://www.catb.org/esr/writings/taoup/html/ch08s01.html][Understanding the Taxonomy of Languages]]
+*** minilanguages: power vs complexity
+** Regular Expressions are powerful
+#+CAPTION: [[https://xkcd.com/208/][https://xkcd.com/208/]]
+#+ATTR_LaTeX: height=6cm
+[[file:assets/regular_expressions.png]]
 
-[[file:assets/regular_expressions.org]]
+** With great power...
 
+#+begin_quote
+Some people, when confronted with a problem, think
+“I know, I'll use regular expressions.”   Now they have two problems. 
+#+end_quote
+(See [[http://regex.info/blog/2006-09-15/247][Jeffrey Friedl's Blog]] for history of this quote)
+- Don't over-use regular expressions
+** be smart 							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+: $ examples/besmart.py < files/somewords
+  
 * Continue exercises
 ** regex and filtering
 - continue work on =phonefilter= implementation using =grep=, =sed= in a bash script

@@ -1,0 +1,103 @@
+#+TITLE: Regular Expressions
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Looking ahead
+** Schedule
+*** This week: more regex
+*** Next week: Spring Break
+*** 3/18, 3/20: More with python/regex, task assignment due
+*** 3/25, 3/27: Review, Midterm
+ 
+* Stream editing with =sed= 						:sed:
+** a simple example						   :sed:moby:
+*** moby\_excerpt.txt			  :B_block:B_ignoreheading:B_example:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+#+include: "~/ece2524/files/moby_excerpt.txt" src
+
+*** command line 						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+$ sed 's/fish/whale/' moby_excerpt.txt
+$ sed 's/fish/whale/g' moby_excerpt.txt
+$ sed 's/[Ff]ish/whale/g' moby_excerpt.txt
+$ sed '/fish/d' moby_excerpt.txt
+#+end_example
+
+** scripting with =sed=
+*** fish\_whale.sed						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+include: "~/ece2524/examples/fish_whale.sed" src sed
+
+
+*** script file							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+#+begin_example
+$ sed -f fish_whale.sed moby_excerpt.txt
+#+end_example
+
+*** once more, with a bang					    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+#+begin_example
+$ ./fish_whale.sed moby_excerpt.txt
+#+end_example
+
+* More complex behavior
+** Python's =re= module
+
+*** fish\_whale.py						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+include "~/ece2524/examples/fish_whale.py" src Python
+
+*** More Examples 						    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+- fish\_whale2.py
+- phonefilter.py
+
+* Continue exercises
+** regex and filtering
+- continue work on =phonefilter= implementation using =grep=, =sed= in a bash script
+- implement =tagfilter= in python: print all words read from /standard
+  in/ preceeded by '+', one per line
+#+begin_example
+$ ./tagfilter.py < lorem_ipsum.txt
+#+end_example
+*** Python tips							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+#+begin_src python
+a = ['first','second'] # a list of strings
+a = a + b # concatinate list b with list a
+a += b    # same
+m = re.findall(pattern, string) 
+# return a list 'm' of all matches of 'pattern' in 'string'
+#+end_src

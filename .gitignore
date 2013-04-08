@@ -3,3 +3,10 @@ docs/*.pdf
 docs/*.tex
 solutions/*
 repos/*
+*.pyc
+docs/*.html
+docs/*.pdf
+docs/assignments/*.html
+docs/assignments/*.pdf
+*.o
+*.d
