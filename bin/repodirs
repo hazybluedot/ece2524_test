@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+   echo "Usage: $(basename $0) PATH_TEMPLATE" >&2
+   exit 1
+fi
+
+path_template="$1"
+
+while read gituser; do
+    repo_dir=$(echo $path_template | sed s/CREATOR/$gituser/g)
+    if [ -d "$repo_dir" ]; then
+	echo "$repo_dir"
+    else
+	echo "$repo_dir" >&2
+    fi
+done

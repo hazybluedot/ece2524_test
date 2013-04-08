@@ -52,6 +52,7 @@
 
 #+BEGIN_EXAMPLE
 $ examples/bepythonic.py
+$ examples/python-switch.py
 #+END_EXAMPLE
 
 *** learning a new language (vocabulary, syntax) is easy, but fluency takes time and practice

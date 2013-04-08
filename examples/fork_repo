@@ -16,4 +16,5 @@ fi
 
 repo=$git_user/${base_repo}${postfix}
 
-ssh ece2524git@ece2524.ece.vt.edu fork $base_repo $repo && git clone ece2524git@ece2524.ece.vt.edu:$repo
+ssh ece2524git@ece2524.ece.vt.edu fork $base_repo $repo || echo "fork already done, attempting to clone" >&2
+git clone ece2524git@ece2524.ece.vt.edu:$repo
