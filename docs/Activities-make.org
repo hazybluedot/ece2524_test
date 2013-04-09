@@ -1,0 +1,42 @@
+#+TITLE: make
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Introduction
+
+** Recall: Anatomy of a Makefile
+
+#+begin_example
+target ... : prerequisites ...
+    recipe
+    ...
+    ...
+#+end_example
+
+* Activities
+** Makefile for mult
+*** targets
+- all
+- mult
+- clean
+
+** Makefile for "What is Unix"
+*** targets
+- all :: generate both pdf and html
+- pdf :: generate pdf output
+- html :: generate html output
+- publish :: generate pdf and html and copy output to a "output" directory set in a variable defined towards teh top of the Makefile
+- clean :: remove any generated output, includeing pdf and html files, from the current directory (i.e. should not affect the "output" directory)
