@@ -1,0 +1,90 @@
+#+TITLE: Midterm Review
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Goals
+** Apply the Unix Philosophy
+*** Small is Beautiful
+*** Make each program do one thing well
+*** Build a prototype as soon as possible
+*** Choose portability/transparency over efficiency
+*** Store data in flat text files
+*** Use software leverage to your advantage
+*** Use shell scripts to increase leverage and portability
+*** Avoid captive user interfaces
+*** Make every program a filter
+
+** Something you're interested in
+*** Interested in learning
+*** Interested in creating
+
+** Components
+*** Design
+*** Make
+*** Review
+*** Write
+
+* Ideas
+** Considerations
+*** Must be something that can be easily tested, evaluated by anyone with access to a *nix environment
+- no special hardware requirements
+- avoid dependencies on external data that require an account sign-up
+
+*** Must implement core functionality as a command line utility without Qt dependencies
+- A Qt-powered GUI may be included if implemented as a server/client framework
+
+** Past Projects
+*** text based adventure game
+- Rule of Representation
+- make code logic as simple as possible, move complexity to data
+- how can you represent different kinds of objects and abilities?
+
+*** Personal Finance Manager 
+- similar in design to task assignment
+- extendable to multi-user/roommate finance tracker
+
+*** Room reservation system
+- store room availability as a text file
+- command line interface, but may choose to include a desktop GUI or web interface.
+
+*** IRC bot
+- like Wadsworth!
+- text parsing
+- data management
+- e.g. look up man pages, or python documentation
+
+** Extension Projects
+*** Simple Shell (extends upcoming fork/exec assignment)
+
+
+** Meta Projects
+*** Dynamic Midterm generator
+- pull random questions from a pool
+- compare output to reference at runtime to optionally provide live feedback
+
+*** git managed static site generator for ECE2524 resources
+- enable users to contribute via fork and pull request
+- convenient one-stop spot for important class info and links to more detailed resources
+
+*** Framework for reviewing lots of source files
+- easily specify types of tests to run
+- easily specify how to check output (simple `diff`, or run through a custom filter)
+- consistent means to quickly review and comment on source files
+- generate comment and points summary report
+
+* Timeline
+** 4/1-4/8 Form groups and topic ideas
+** 4/14-4/20 Prototype
