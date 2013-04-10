@@ -20,18 +20,26 @@
 ** Recall: Anatomy of a Makefile
 
 #+begin_example
+myvar := "variable assignment"
+
 target ... : prerequisites ...
     recipe
+    echo $(myvar)  # variable usage (and a comment!)
     ...
     ...
 #+end_example
 
+- single TAB preceding /recipe/
+
 * Activities
 ** Makefile for mult
+*** get up-to-date version of =mult.cc= source with CLA parsing support
 *** targets
-- all
-- mult
-- clean
+- all :: 'mult' target is the only prerequisite
+- mult :: make sure object file is built in a separate rule, and linked in this target
+- clean :: remove any generated files (probably just object files)
+*** considerations
+- use a variable to define the library linking CLA
 
 ** Makefile for "What is Unix"
 *** targets
@@ -40,3 +48,18 @@ target ... : prerequisites ...
 - html :: generate html output
 - publish :: generate pdf and html and copy output to a "output" directory set in a variable defined towards teh top of the Makefile
 - clean :: remove any generated output, includeing pdf and html files, from the current directory (i.e. should not affect the "output" directory)
+
+** create a test suite for =mult= (if time)
+*** Use =unittest.sh= from the midterm as an example
+*** Create the necessary test input and sample output files in a =test= subdirectory
+*** script run four tests
+- compiling =mult= 
+- running =mult= with sample input (if compile was successful)
+- running =mult.py= with sample input
+- running =mult.sh= with sample input
+
+*** print =PASS= or =FAIL= to indicate result of each test
+*** add a =test= target to the =Makefile= that will run these tests when invoked
+#+BEGIN_EXAMPLE
+$ make test
+#+END_EXAMPLE
