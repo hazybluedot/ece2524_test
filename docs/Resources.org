@@ -7,6 +7,7 @@
 - =ls= (=-l=, =-a=)
 - =cp=
 - =mv=
+- =mkdir=
 - =rm=
 - =cat=
 - =echo=
@@ -47,7 +48,6 @@ Even if you don't know anything about commands =A= or =B= you should have a good
 - [username@]hostname[:pathname], e.g. what is the username, hostname and path in =ece2524git@ece2524.ece.vt.edu:solutions/mult.git=?
  
 
-** Commands you should have a very good understanding of what they do and how they are used, but may have to 
 * =git=
 ** Repos of note
 - ece2524git@ece2524.ece.vt.edu:ece2524.git :: source for all published class material, example files and programs
@@ -101,3 +101,9 @@ For more, a whole lot more, [[http://blog.hawkhost.com/2010/06/28/tmux-the-termi
 ** character classes you should have good understanding of
 - =\w= :: word characters, equivalent to =[_a-zA-Z0-9]= (see bracketed ranges)
 - =\s= :: a whitespace character (space, tab, etc.)
+* Python
+** Videos
+[[http://pyvideo.org/video/1780/transforming-code-into-beautiful-idiomatic-pytho][Transforming Code into Beautiful, Idiomatic Python]]
+** Code Examples
+[[http://nbviewer.ipython.org/][IPython Notebook Viewer]]
+[[http://www.pythontutor.com/][Python Tutor]] - "learn programming by visualizing code execution"
