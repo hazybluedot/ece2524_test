@@ -142,18 +142,6 @@ clean:
   :BEAMER_env: example
   :END:
 #+begin_src make
-objects := mult.o
-libs := -lboost_program_options
-
-mult: $(objects)
-    g++ -o mult mult.o
-
-mult.o: mult.cc mult.hpp
-    g++ -c mult.cc $(libs)
-
-#+end_src
-
-#+begin_src make
 objects := accumulator.o main.o
 libs := -lboost_program_options
 
@@ -211,3 +199,13 @@ $ cat accumulator.d
 
 -include $(objects:.o=.d)
 #+end_src
+
+** Going Further with =make=
+*** Tools that make Makefiles
+- GNU [[http://www.gnu.org/software/automake/][automake]]
+- Qt [[http://qt-project.org/doc/qt-4.8/qmake-manual.html][qmake]] 
+- [[http://www.cmake.org/][cmake]]
+
+*** Further Reading
+- [[http://www.catb.org/esr/writings/taoup/html/ch15s04.html][make: Automating Your Recipes]] (Raymond)
+- [[http://miller.emu.id.au/pmiller/books/rmch/][Recursive make considered harmful]]

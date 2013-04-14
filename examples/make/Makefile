@@ -1,3 +1,4 @@
+
 acctest: main.o accumulator.o
 	g++ -o acctest main.o accumulator.o
 
