@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 def fib(stop):
     x = 0
@@ -12,4 +12,5 @@ if __name__ == '__main__':
 
     for line in map(str.strip, sys.stdin):
         N = int(line)
-        print(sum( x for x in fib(lambda x: x < N) if x % 2 == 0 ))
+        print(sum( x for x in fib(lambda x: x < N) ))
+        sys.stdout.flush()
