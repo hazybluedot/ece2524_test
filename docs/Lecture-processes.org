@@ -1,0 +1,121 @@
+#+TITLE: Process Management
+#+AUTHOR: Darren Maczka
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+LaTeX_HEADER: \usepackage[greek,english]{babel}
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Introduction
+** It's an eco-system
+*** Recall
+- program :: executable code, usually stored in a file
+- process :: a running program, i.e. code loaded into memory, 
+*** Unix philosophy
+- small programs, each does one thing well
+- text is the universal language
+- write programs as filters (read text on /standard in/, write text to /standard out/
+
+*** enabling the Unix philosophy
+- "cheap" and easy process creation
+* Process Control
+** Getting information about processes
+*** Getting information
+- =top= (or =htop=)
+- =ps=
+*** Controlling the state of processes
+- =fg=
+- =bg=
+- =kill=
+** Communicating with a running process
+*** standard io
+- /standard in/ (fd 0)
+- /standard out/ (fd 1)
+- synchronous
+- system calls =read=, =write=
+
+*** signals 
+- asynchronous
+- interrupt
+- signal handlers (defaults defined in C library)
+- =man 7 signal=
+
+** foreground, background, stopped, oh my!
+*** stop a running foreground process 				  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+BEGIN_EXAMPLE
+$ ./counter.sh
+0
+1
+^Z
+[1]+  Stopped                 ./counter.sh
+$
+#+END_EXAMPLE
+
+*** continue a stopped process in the background		  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+BEGIN_EXAMPLE
+[1]+  Stopped                 ./counter.sh
+$ bg
+2
+3
+#+END_EXAMPLE
+** foreground, background, stopped, oh my!
+*** starting a program in the background			  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+BEGIN_EXAMPLE
+$ ./counter.sh &
+0
+$ 1
+2
+3
+#+END_EXAMPLE
+*** Keyboard interrupts are sent to foreground process, not background
+** process groups
+*** processes in the same pipeline are added to their own process group
+- makes signaling easier
+#+BEGIN_EXAMPLE
+$ ./counter.sh | ./fib.py | uniq
+.
+.
+.
+^Z
+$ jobs
+$ ps jf
+#+END_EXAMPLE
+
+** With great power...
+*** Classic fork bomb						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+BEGIN_EXAMPLE
+:(){ :|: & }; :
+#+END_EXAMPLE
+*** human readable						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+BEGIN_EXAMPLE
+bomb() {
+    bomb | bomb &
+}
+bomb
+#+END_EXAMPLE
+*** \gamma\nu\omega\theta\iota \sigma\alpha\nu\tau\omikron\nu
+#+BEGIN_EXAMPLE
+$ sudoedit /etc/security/limits.conf
+...
+
+#+END_EXAMPLE
