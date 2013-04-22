@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 	    pause();
 	    execv("./child", NULL);
 	    perror("child execv"); // if we get to this line, the call to execv must have failed
-	    exit(EXIT_FAILURE);
+	    _Exit(EXIT_FAILURE); // use _exit in child, not exit
 	} else {
 	    // parent
 	    printf("Parent spawned child %d\n", pid);
@@ -62,13 +62,23 @@ int main(int argc, char *argv[]) {
     // if there had been no execv or exit in the child process, it
     // would execute this code as well
     int status;
-    pid_t cpid = waitpid(0, &status);
-    if (cpid == -1) {
+    pid_t cpid;
+    do {
+      cpid = waitpid(0, &status);
+      if (cpid == -1) {
 	perror("waitpid");
-	return 1;
-    } else {
-	fprintf(stderr, "Reaped child process %d\n", cpid);
-    }
+	exit(EXIT_FAILURE);
+      }
+      if (WIFEXITED(status)) {
+	printf("exited, status=%d\n", WEXITSTATUS(status));
+      } else if (WIFSIGNALED(status)) {
+	printf("killed by signal %d\n", WTERMSIG(status));
+      } else if (WIFSTOPPED(status)) {
+	printf("stopped by signal %d\n", WSTOPSIG(status));
+      } else if (WIFCONTINUED(status)) {
+	printf("continued\n");
+      }
+    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
-    return 0;
+    exit(EXIT_SUCCESS);
 }

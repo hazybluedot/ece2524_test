@@ -45,5 +45,5 @@ int main(int argc, char *argv[]) {
     }
     
     printf("process %d continuing past loop and exiting\n", getpid());
-    return 0;
+    return EXIT_SUCCESS;
 }
