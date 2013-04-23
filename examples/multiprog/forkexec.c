@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
 	fprintf(stderr, "opened file %s for writing on FD %d\n", argv[1], fd);
 	sprintf(buffer, "hello world, from PID %d\n", getpid());
 	write(fd, buffer, strlen(buffer));
-	close(fd);
     }
     
     while(!g_stop) {
