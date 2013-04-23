@@ -21,6 +21,7 @@ void sig_handler(int signum)
 
 int main(int argc, char *argv[]) {
     g_stop = 0;
+    int counter = 0;
     char buffer[BUF_SIZE];
 
     printf("Parent process %d\n", getpid());
@@ -35,15 +36,18 @@ int main(int argc, char *argv[]) {
 	    // fork failed
 	    return -1;
 	} else if (pid == 0) {
-	    // child process
-	    printf("Child process with PID %d\n", getpid());
-	    pause();
+	  // child process
+	  printf("Child process %d started with PID %d\n", counter, getpid());
+	  pause();
+	  exit(EXIT_SUCCESS);
 	} else {
 	    // parent
-	    printf("Parent spawned child %d\n", pid);
+	  printf("Parent spawned child number %d with PID %d\n", counter+1, pid);
+	  ++counter;
 	}
     }
     
     printf("process %d continuing past loop and exiting\n", getpid());
+    printf("Total of %d children spawned\n", counter);
     return EXIT_SUCCESS;
 }

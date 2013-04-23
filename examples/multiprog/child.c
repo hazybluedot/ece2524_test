@@ -9,6 +9,9 @@ int main(int argc, char *argv[]) {
 
     printf("Test process with PID %d\n", getpid());
     
+    sprintf(buffer, "child[%d]: writing to file\n", getpid());
+    write(3, buffer, strlen(buffer));
+    perror("write");
     pause();
 
     printf("Test process %d terminating\n", getpid());
