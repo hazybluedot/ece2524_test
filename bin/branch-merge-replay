@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SESSION_NAME="branch_merge_replay"
+SCRIPT_PATH="$HOME/ece2524/bin"
+
+cd /tmp
+
+tmux new-session -d -s "$SESSION_NAME"
+tmux select-pane -t "${SESSION_NAME}0.0"
+tmux split-window -h -t "${SESSION_NAME}:0.0"
+tmux split-window -v -t "${SESSION_NAME}:0.1"
+tmux split-window -v -t "${SESSION_NAME}:0.1"
+tmux select-layout main-vertical
+eval "${SCRIPT_PATH}/branch-merge-transcript \"$SESSION_NAME\" \"$SCRIPT_PATH\"" &
+tmux attach -t "$SESSION_NAME" 
