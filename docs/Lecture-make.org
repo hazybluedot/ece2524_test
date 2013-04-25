@@ -1,0 +1,211 @@
+#+TITLE: make
+#+AUTHOR: Darren Maczka
+#+LaTeX_HEADER: \usepackage{xcolor}
+#+LaTeX_HEADER: \usepackage{mathptmx}
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usetikzlibrary{arrows}
+#+LaTeX_HEADER: \usepackage{verbatim}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Motivation
+** Typical Build chain
+#+begin_example
+$ g++ -c accumulator.cc
+$ g++ -c main.cc
+$ g++ -o acctest accumulator.o main.o
+#+end_example
+
+*** lots of typing
+*** tedious and error prone
+ 
+*** write a bash script!					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+#!/bin/sh
+g++ -c accumulator.cc
+g++ -c main.cc
+g++ -o acctest accumulator.o main.o
+#+end_example
+*** hundreds of source files, long build times
+
+** Write a Smarter Shell Script
+#+begin_src shell
+objects="accumulator.o main.o"
+
+for object in $objects; do
+     src=$(echo $object | sed 's/\.o$/\.cc/')
+     [ $object -nt $src ] && g++ -c $src
+do
+
+comp=0
+for object in $objects; do
+    [ $object -nt $binname ] && comp=1
+done
+
+(( $comp )) && g++ -o acctest $objects
+#+end_src
+
+*** main.sh							  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+** Still Not Perfect
+*** need to check for existence too
+*** multi-binary projects
+*** lots of boilerplate code
+*** There's a better way...
+
+* There's a Better Way
+** GNU =make=
+*** automatically determines which files need to be rebuilt
+*** runs commands to rebuild them
+*** rules for when and how to build in =Makefile=
+*** build project						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+$ make
+g++    -c -o main.o main.cc
+g++    -c -o accumulator.o accumulator.cc
+g++ -o acctest main.o accumulator.o
+$ 
+#+end_example
+** GNU =make=
+*** only builds what is necessary
+*** =Makefile= defines dependencies
+*** run it again 						  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+$ make
+make: `acctest' is up to date.
+$ touch accumulator.cc
+$ make
+g++    -c -o accumulator.o accumulator.cc
+g++ -o acctest main.o accumulator.o
+$
+#+end_example
+
+* Targets, Patterns and Variables. Oh my!
+** Anatomy of a Makefile
+A make file contains one or more "rules", each with the following format:
+
+#+begin_example
+target ... : prerequisites ...
+    recipe
+    ...
+    ...
+#+end_example
+
+- target :: /usually/ the name of a generated file
+- prerequisites :: space delimited list of files that target depends on
+- recipe :: valid shell command that will create /target/ out of /dependencies/. There /must/ be a single TAB character preceding the recipe.
+
+*** accumulator 						  :B_example:
+  :PROPERTIES:
+  :BEAMER_env: example
+  :END:
+#+begin_src make
+accumulator.o: accumulator.cc
+    g++ -c accumulator.cc
+#+end_src
+
+** More Targets
+*** rules need not have prerequisites
+*** recipes need not generate target files
+*** all and clean targets 					  :B_example:
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+#+begin_example
+all: acctest
+
+clean:
+    rm *.o
+#+end_example
+
+** Variables
+*** accumulator 						  :B_example:
+  :PROPERTIES:
+  :BEAMER_env: example
+  :END:
+#+begin_src make
+objects := accumulator.o main.o
+libs := -lboost_program_options
+
+acctest: $(objects)
+    g++ -o acctest $(objects)
+
+accumulator.o: accumulator.cc accumulator.hpp
+    g++ -c accumulator.cc -o accumulator.o
+...
+#+end_src
+** Automatic Variables
+*** accumulator 						  :B_example:
+  :PROPERTIES:
+  :BEAMER_env: example
+  :END:
+#+begin_src make
+objects := accumulator.o main.o
+
+acctest: $(objects)
+    g++ -o $@ $^
+
+accumulator.o: accumulator.cc
+    g++ -c $< -o $@
+...
+#+end_src
+
+** Pattern Rules
+*** accumulator 						  :B_example:
+  :PROPERTIES:
+  :BEAMER_env: example
+  :END:
+#+begin_src make
+objects := accumulator.o main.o
+libs := -lboost-program-options
+
+acctest: $(objects)
+    g++ -o $@ $^ $(libs)
+
+%.o: %.cc
+    g++ -c $< -o $@
+#+end_src
+
+
+** Automatic Dependencies
+*** nifty =gcc= option =-MMD=
+#+begin_example
+$ gcc -MMD -c accumulator.cc
+$ cat accumulator.d
+#+end_example
+
+*** use this in =Makefile=
+#+begin_src make
+%.o: %.cc
+	g++ -c -MMD -o $@ $<
+
+-include $(objects:.o=.d)
+#+end_src
+
+** Going Further with =make=
+*** Tools that make Makefiles
+- GNU [[http://www.gnu.org/software/automake/][automake]]
+- Qt [[http://qt-project.org/doc/qt-4.8/qmake-manual.html][qmake]] 
+- [[http://www.cmake.org/][cmake]]
+
+*** Further Reading
+- [[http://www.catb.org/esr/writings/taoup/html/ch15s04.html][make: Automating Your Recipes]] (Raymond)
+- [[http://miller.emu.id.au/pmiller/books/rmch/][Recursive make considered harmful]]

@@ -1,0 +1,23 @@
+#1
+cut -f 1 < sample/animals/cats
+
+#2
+cut -f 1 < sample/animals/cats | grep -v '^#'
+#or
+cut -f 1 < sample/animals/cats | grep "^[^#]"
+#or
+cut -f 1 < sample/animals/cats | sed '/^#/d'
+# or because the question wasn't clear and said "the line starting
+# with '#'" instead of "all lines starting with '#'" I also accepted
+# solutions that simply removed the first line of output from the cut
+# command.
+
+#3
+<sample/animals/dolphins sed 's/dolphin//'
+# I took 1 point off if the input file was given as a CLA and not
+#  directed to standard in with <
+# similarly for solutions that piped the results of `cat` to `sed`. Note that this would be a "Useless Use of Cat"
+# http://partmaps.org/era/unix/award.html
+
+#4
+<sample/animals/dolphins sed 's/dolphin//' | sort >/output/dolphins

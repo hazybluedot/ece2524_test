@@ -1,0 +1,11 @@
+#1
+find sample/ -name '*s'
+#or, since the question wasn't clear on "regular file" vs "file"
+find sample/ -name '*s' -type f
+#2
+cat sample/animals/cats sample/animals/dogs > output/pets
+
+#3
+chmod 764 test/example.sh
+#or 
+chmod u=rwx,g=rw,o=r test/example.sh

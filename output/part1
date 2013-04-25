@@ -1,0 +1,8 @@
+Script started on Tue 26 Mar 2013 11:26:18 PM EDT
+_rflowers@ascl29:~/midterm\[rflowers@ascl29 midterm]$ ls [K
+bin  INTRODUCTION.md  part1  part1.time  part2	README.md  ref	sample	test
+_rflowers@ascl29:~/midterm\[rflowers@ascl29 midterm]$ mkdir output
+_rflowers@ascl29:~/midterm\[rflowers@ascl29 midterm]$ mv part2 output/
+_rflowers@ascl29:~/midterm\[rflowers@ascl29 midterm]$ exit
+
+Script done on Tue 26 Mar 2013 11:28:33 PM EDT

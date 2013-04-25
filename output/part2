@@ -1,0 +1,16 @@
+## Multiple choice: for each question, list the letter corresponding
+## to the correct answer.  If more than one answer is correct, separate
+## letters by a single comma (,)
+
+#1) B
+#2) A
+#3) B,D
+#4) B
+
+#Notes: 
+
+#3) Linux was not created until 1991, so A was not an event "in the
+#same decade", I took off one point if this answer was given along
+#with either B or D.  While C did in fact happen, it likely did not
+#contribute to the eventual success of Unix and if anything, would
+#have contributed to its demise if it hadn't been for B and D.
