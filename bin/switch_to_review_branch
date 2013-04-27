@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+path="$1"
+duedate="$2"
+branchname="$3"
+
+userpath="$path"
+if [ -d "$userpath" ]; then
+    pushd .
+    cd $userpath
+    mkdir -p doc
+    git checkout master 2>/dev/null
+    ontime-commit "$duedate" 2>doc/ontime.error | gitbranchat "$branchname" 2>> doc/branch.error
+    if [ $(wc -c <doc/ontime.error) -gt 0 ]; then
+	echo "HEAD" | gitbranchat "$branchname" 2>> doc/branch.error
+    fi
+    popd
+fi

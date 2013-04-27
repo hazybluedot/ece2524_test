@@ -1,0 +1,53 @@
+#!/bin/bash
+
+REPO_NAME="newrepo"
+SESSION_NAME="$1"
+SCRIPT_PATH="$2"
+REPO_PATH="/tmp/${REPO_NAME}"
+
+function send_cmd
+{
+	CMD="$1"
+	if [ -z "$2" ]; then
+	   WIN_ID="0.0"
+	fi
+	if [ -z "$3" ]; then
+	   SLEEP_DELAY=1
+	else
+	   SLEEP_DELAY=0
+	fi
+
+	tmux send-keys -t "${SESSION_NAME}:${WIN_ID}" "$CMD"
+	if $SLEEP_DELAY -gt 0; then
+		sleep $SLEEP_DELAY	
+	fi
+	tmux send-keys -t "${SESSION_NAME}:${WIN_ID}" C-m
+	if $SLEEP_DELAY -gt 0; then
+	   sleep 0.5
+	fi
+}
+
+function get_current_HEAD
+{
+	HEAD=$(send_cmd "git log --oneline | head -n 1 | cut -d ' ' -f 1 > current_head" 0.0 0)
+	cat current_head
+}
+
+cd /tmp
+
+sleep 2
+
+tmux send-keys -t "${SESSION_NAME}:0.0" "git init newrepo; cd newrepo" C-m
+tmux send-keys -t "${SESSION_NAME}:0.1" "cd $REPO_PATH; ${SCRIPT_PATH}/git-watch-heads" C-m
+tmux send-keys -t "${SESSION_NAME}:0.2" "cd $REPO_PATH; ${SCRIPT_PATH}/git-watch-log" C-m
+tmux send-keys -t "${SESSION_NAME}:0.3" "cd $REPO_PATH; ${SCRIPT_PATH}/git-watch-objects" C-m
+
+send_cmd "touch index"
+send_cmd "git add index"
+send_cmd "git commit -m \"initial commit\""
+send_cmd "echo add some lines of data to 'index', then add and commit the changes"
+HEAD=$(get_current_HEAD)
+while [ $(get_current_HEAD) = $HEAD ]; do
+      sleep 1
+done
+send_cmd "echo good"
