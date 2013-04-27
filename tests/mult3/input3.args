@@ -1,0 +1,7 @@
+
+-v
+--verbose
+-s
+--strict
+-s -v
+--strict --verbose
