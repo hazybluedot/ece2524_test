@@ -88,7 +88,7 @@ usage() {
 }
 
 if [ ! -x "$1" ]; then
-    echo "$1: not executable"
+    echo "$1: not executable" >&2
     usage >&2
     exit 1
 else
@@ -96,7 +96,7 @@ else
 fi
 
 if [ ! -d "$2" ]; then
-    echo "$2: not a directory"
+    echo "$2: not a directory" >&2
     usage >&2
     exit 1
 else
