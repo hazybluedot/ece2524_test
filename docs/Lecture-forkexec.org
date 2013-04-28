@@ -1,0 +1,53 @@
+#+TITLE: fork/exec
+#+AUTHOR: Darren Maczka
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 2
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+BEAMER_HEADER_EXTRA: \usetheme{CambridgeUS}
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Env Args) %4BEAMER_col(Col) %8BEAMER_extra(Extra)
+#+PROPERTY: BEAMER_col_ALL 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 :ETC
+
+* Introduction
+** fork/exec
+*** fork
+- creates a new process, duplicating the calling process
+- check return value to determine if in child or parent
+*** exec
+- a family of system calls
+- replace current process image with a new process image
+
+* Exercises
+** experimentation
+*** Are signal handlers preserved across a =fork=? What about an =exec=? 
+*** What happens if you try to handle =SIGKILL=?
+*** What is the behavior of global and local variables in child processes? 
+- Are either preserved across an =exec=?
+*** What about open file descriptors?
+- across =fork=?
+- across =exec=?
+- can more than one process have an open file descriptor to the same file at one time?
+*** What happens to a child process if it terminates or is killed before the parent calls =wait= on it?
+*** What happens if the child process calls =fork()=?
+*** Send SIGUSR1 to the process group associated with =fork_demo= several times, what happens? Why?
+*** Send SIGUSR1 to the process group associated with =forkexec= several times, what happens? Why?
+** modification
+*** Using =forkexec= as a template
+- copy into your =week14= git repo directory
+- accept command line arguments, the first will be an integer, the next will be path to an executable program, the remaining will be arguments to pass to the executable.
+
+#+BEGIN_EXAMPLE
+$ ./forkexec 3 ./child arg1 arg2
+#+END_EXAMPLE
+
+should spawn three =child= programs, each with an argument array:
+#+BEGIN_EXAMPLE
+['./child', 'arg1', 'arg2']
+#+END_EXAMPLE
+
+** submit
+*** =ece2524.ece.vt.edu:inclass/CREATOR/week14.git=
+- =README= :: response to however many questions you were able to discuss
+- =CONTRIBUTORS= :: file containing a list of the git users who took part in the discussion
