@@ -1,9 +1,15 @@
 #!/bin/bash
 
 status="0"
-script_path=$(realpath ".")
-if [ -d "$1" ]; then
-    script_path=$(realpath "$1")
+branch="$1"
+date="$2"
+
+echo "checking out commit no later than $date to $branch"
+switch_to_review_branch "$(realpath ".")" "$date" "$branch"
+
+if [ "$branch" != $(git symbolic-ref --short HEAD) ]; then
+    echo "Branch mismatch: $branch" >&2
+    exit 1
 fi
 
 require() {
@@ -18,8 +24,9 @@ require() {
 }
 
 compile() {
+    local l="$1"
     g++ -Wall -g -c mult.cc >dkm_review/mult.cc.g++.stdout 2>dkm_review/mult.cc.g++.stderr
-    g++ -Wall -g -o mult mult.o -lboost_program_options >>dkm_review/mult.cc.g++.stdout 2>>dkm_review/mult.cc.g++.stderr
+    g++ -Wall -g -o mult mult.o $l >>dkm_review/mult.cc.g++.stdout 2>>dkm_review/mult.cc.g++.stderr
 }
 
 dotests() {
@@ -33,19 +40,26 @@ dotests() {
 do_sh_tests() {
     local refpath="$1"
     local inputpath="$2"
-    require 'mult.sh' && echo $(realpath "./mult.sh") | progtest.sh "${refpath}/mult.sh" "$inputpath" >dkm_review/mult.sh.tests
+    require 'mult.sh' && echo $(realpath "./mult.sh") | \
+	progtest.sh "${refpath}/mult.sh" "$inputpath" >dkm_review/mult.sh.tests || \
+	echo "errors running tests on mult.sh" >&2
+
 }
 
 do_py_tests() {
     local refpath="$1"
     local inputpath="$2"
-    require 'mult.py' && echo $(realpath "./mult.py") | progtest.sh "${refpath}/mult.py" "$inputpath" >dkm_review/mult.py.tests
+    require 'mult.py' && echo $(realpath "./mult.py") | \
+	progtest.sh "${refpath}/mult.py" "$inputpath" >dkm_review/mult.py.tests || \
+	echo "errors running tests on mult.py" >&2
 }
 
 do_cc_tests() {
     local refpath="$1"
     local inputpath="$2"
-    require 'mult.cc' && compile && echo $(realpath "./mult") | progtest.sh "${refpath}/mult" "$inputpath" >dkm_review/mult.cc.tests
+    require 'mult.cc' && compile '-lboost_program_options' && echo $(realpath "./mult") | \
+	progtest.sh "${refpath}/mult" "$inputpath" >dkm_review/mult.cc.tests || \
+	echo "errors running tests on mult.cc" >&2
 }
 
 part3() {
@@ -65,8 +79,6 @@ part3() {
 }
 
 # check that expected files are present and readable
-pushd .
-cd ${script_path}
 
 mkdir -p dkm_review
 rm -f dkm_review/mult.*.* 
@@ -74,7 +86,6 @@ rm -f dkm_review/diffs/*
 rm -f dkm_review/test.errors
 rm -f dkm_review/general.errors
 
-branch=$(git symbolic-ref --short HEAD)
 case $branch in
     dkm_review_part1)
 	dotests "$HOME/ece2524/solutions/mult1" "$HOME/ece2524/tests/mult1"
@@ -95,9 +106,14 @@ case $branch in
 	;;
 esac
 
+
 rm -f *.o *.d
 rm -f mult
 
-popd
+$HOME/ece2524/tests/mult.summarize
+
+echo "adding/commiting $branch in $(pwd)"
+git add dkm_review/
+git commit -m "tests run on $(date)" >/dev/null
 
 exit "$status"
