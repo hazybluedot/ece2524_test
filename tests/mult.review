@@ -1,0 +1,54 @@
+#!/bin/bash
+
+passfail() {
+    local stub="$1"
+    echo "$(grep -c 'PASS' dkm_review/${stub}.tests 2>/dev/null) / $(grep -c -E '(PASS|FAIL)' dkm_review/${stub}.tests 2>/dev/null)"
+}
+
+summarize() {
+    echo "General:"
+    cat dkm_review/*.testerr | uniq
+    if [ -s "dkm_review/ontime.error" ]; then
+	echo "late: $(cat dkm_review/ontime.error)"
+    fi
+    for file in mult.sh mult.py mult.cc; do
+	if [ ! -r "$file" ]; then
+	    echo "$file: not found"
+	fi
+	if [ -r "dkm_review/${file}.tests" ]; then
+	    percent=$(echo "scale=2; ($(passfail $file))*100" | bc)
+	    echo "$file: passed $(passfail $file) tests (${percent}%)"
+	fi
+    done
+    if grep 'FAIL' dkm_review/mult.*.tests; then
+	echo -e "\nFailed Tests:"
+	while read failed; do
+	    echo -e "\n$failed"
+	    cat dkm_review/diffs/${failed}.diff
+	done < <(grep -h 'FAIL' dkm_review/mult.*.tests | cut -d ':' -f 1)
+    fi
+}
+
+summary_log="dkm_review/summary"
+branch=$(git symbolic-ref --short HEAD)
+
+wd=$(pwd)
+tmux send-keys -t review:1.1 "cd $wd; clear" C-m
+summarize > $summary_log
+
+case $branch in
+    dkm_review_part1)
+    	;;
+    dkm_review_part2)
+	emacsclient --server-file=review $( ifexist 'README' $summary_log 'mult.sh' 'mult.py' 'mult.cc' | xargs )
+	;;
+    dkm_review_part3)
+	src_file=$(grep -E  'mult\.(py|sh|cc): passed' dkm_review/summary | cut -d ':' -f 1)
+	emacsclient --server-file=review $( ifexist 'README' $summary_log $src_file | xargs )
+	;;
+    dkm_review_makefile)
+	;;
+    *)
+	echo "$branch: unknown branch" >&2
+	;;
+esac

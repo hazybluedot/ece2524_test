@@ -1,0 +1,5 @@
+## clone/pull repos
+#cut -d ' ' -f 2 gitusers | gitname2url assignments/CREATOR/mult.git assignments/CREATOR/mult | gitrepos | tee mult.repos
+
+gitrepopaths assignments/CREATOR/mult | test_parts ../tests/mult1.sh ../tests/mult.deadlines
+gitrepopaths assignments/CREATOR/mult | head -n 2 | ../tests/mult.review_parts ../tests/mult.review ../tests/mult.deadlines
