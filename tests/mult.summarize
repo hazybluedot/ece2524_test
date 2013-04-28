@@ -11,6 +11,11 @@ summarize() {
     if [ -s "dkm_review/ontime.error" ]; then
 	echo "late: $(cat dkm_review/ontime.error)"
     fi
+
+    if [ -s "dkm_review/general.errors" ]; then
+	cat dkm_review/general.errors | uniq
+    fi
+
     for file in mult.sh mult.py mult.cc; do
 	if [ ! -r "$file" ]; then
 	    echo "$file: not found"
