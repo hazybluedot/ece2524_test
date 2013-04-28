@@ -107,3 +107,27 @@ For more, a whole lot more, [[http://blog.hawkhost.com/2010/06/28/tmux-the-termi
 ** Code Examples
 [[http://nbviewer.ipython.org/][IPython Notebook Viewer]]
 [[http://www.pythontutor.com/][Python Tutor]] - "learn programming by visualizing code execution"
+* Using the class slide source files
+** org-mode
+I've experimented with a few text-based formats for writing lecture
+notes and assignments. If the file has a =.org= extension it means
+it's written in =[[http://orgmode.org/][org-mode]]=, an editing mode for the =emacs= editor,
+including a set of scripts to export to different formats.  The major
+drawback is that it depends on emacs (though I keep looking for a
+stand-alone org-mode exporter tool, please let me know if you come
+across one), which is especially annoying for those =vi= purists out
+there who shudder at the thought of =emacs= code cluttering up their
+hard drive.  This, and the export depends on a running instance of
+emacs, making the export process somewhat obnoxious to automate.
+
+** exporting to PDF
+=org-mode= uses the LaTeX typesetting system to export org-mode files to pdf.  The lecture slides also make use of the LaTeX beamer class
+
+#+begin_example
+$ apt-get install org-mode
+$ apt-get install texlive # 287MB download, 481MB installed
+... # this will take a few minutes
+$ apt-get install texlive-latex-extra # 342MB download, 480MB installed
+... # this will take a few minutes
+$
+#+end_example

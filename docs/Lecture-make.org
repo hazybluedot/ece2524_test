@@ -1,10 +1,5 @@
 #+TITLE: make
 #+AUTHOR: Darren Maczka
-#+LaTeX_HEADER: \usepackage{xcolor}
-#+LaTeX_HEADER: \usepackage{mathptmx}
-#+LaTeX_HEADER: \usepackage{tikz}
-#+LaTeX_HEADER: \usetikzlibrary{arrows}
-#+LaTeX_HEADER: \usepackage{verbatim}
 #+LaTeX_CLASS: beamer
 #+LaTeX_CLASS_OPTIONS: [presentation]
 #+BEAMER_FRAME_LEVEL: 2
