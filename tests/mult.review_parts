@@ -1,0 +1,38 @@
+#!/bin/bash
+
+testscript="$1"
+deadlines="$2"
+
+usage() {
+    echo "usage: $(basename $0) SCRIPT FILE"
+}
+
+if [ ! -x "$testscript" ]; then
+   usage >&2
+   exit 1
+else
+    testscript=$(realpath "$testscript")
+fi
+
+if [ ! -r "$deadlines" ]; then
+   usage >&2
+   exit 1
+else
+    deadlines=$(realpath "$deadlines")
+fi 
+
+while read path; do
+    while read part; do
+	branch=$(echo "$part" | cut -d ' ' -f 1)
+	pushd . >/dev/null
+	cd "$path"
+	if ! git checkout "$branch" &>/dev/null; then
+	    echo "$branch: no such branch"
+	    continue
+	fi
+	$testscript
+	git add dkm_review/
+	git commit -m "review on $(date)"
+	popd >/dev/null
+    done < <( grep -v '^#' "$deadlines")
+done

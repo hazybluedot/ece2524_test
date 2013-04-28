@@ -1,0 +1,40 @@
+#!/bin/sh
+
+if [ $# -lt 2 ]; then
+    echo "Usage: `basename $0` REFERENCE_PROG TEST_PROG" >&2
+    exit 1
+fi
+
+ref=( $1 )
+test=( $2 )
+refdir="${ref[0]}"
+refbin="${ref[1]}"
+testdir="${test[0]}"
+testbin="${test[1]}"
+
+outfile=/tmp/$$_test.stdout
+errfile=/tmp/$$_test.stderr
+pushd . >/dev/null
+cd $refdir
+bash $refbin >$outfile.ref 2>$errfile.ref
+popd >/dev/null
+pushd . >/dev/null
+cd $testdir
+bash $testbin >$outfile 2>$errfile
+popd >/dev/null
+
+echo -n "$testbin":
+
+if diff $outfile $outfile.ref >$outfile.diff; then
+    echo -n "PASS,"
+else
+    echo -n "FAIL,"
+fi
+if diff $errfile $errfile.ref >$errfile.diff; then
+	echo "PASS"
+else
+    echo "FAIL"
+fi
+#cat $errfile.diff
+rm -f $outfile $errfile $outfile.diff $errfile.diff
+

@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 
-# cd $GITOLITE_ADMIN_DIR
-
-if [ -z "$1" ]; then
-    echo "Usage: $(basename $0) PATH" >&2
-    exit 1
-else
-    BASENAME="$1"
-fi
-
-if [ -n "$2" ]; then
-    DESTBASE="$2"
-fi
-
-while read GITNAME; do
-    REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
-    REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
-    if [ -n "$DESTBASE" ]; then
-	REPO_DIR=$(echo $DESTBASE | sed s/CREATOR/$GITNAME/g)
+while read gitpath; do
+    git_url=`echo $gitpath | cut -d ' ' -f 1`
+    git_dir=`echo $gitpath | cut -d ' ' -f 2`
+    
+    if git clone $git_url $git_dir >/tmp/$$_gitrepos.stdout 2>/tmp/$$_gitrepos.err; then
+	echo $git_dir
+    elif [ -d $git_dir ]; then
+	cd $git_dir
+	git checkout master 2>/dev/null
+	git pull >/dev/null >&2
+	echo $git_dir
+    else
+	paste <(echo $git_url) /tmp/$$_gitrepos.err >&2
     fi
+    rm -f /tmp/$$_gitrepos.{stdout,err}
+
+    continue
     pushd $(realpath ".")
     if [ -d "$REPO_DIR" ]; then
 	cd $REPO_DIR
@@ -28,6 +26,8 @@ while read GITNAME; do
 	git clone "$REPO_PATH" $REPO_DIR 2>/dev/null
 	if [ $? -ne 0 ]; then
 	    echo "$GITNAME" >&2
+	else 
+	    echo $?
 	fi
     fi
     popd
