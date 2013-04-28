@@ -1,0 +1,10 @@
+ext="$1"
+ref_file="$2"
+diff_file="$3"
+
+case $ext in
+    stderr )
+	test $(wc -l $diff_file) -eq $(wc -l $ref_file) ;;    
+    * )
+     	test -s "$diff_file" ;;
+esac

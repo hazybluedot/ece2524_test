@@ -19,25 +19,23 @@ if ( file -i "$script_name" | grep -E 'text/\w+' &>/dev/null ) ; then
 	fi
     else
 	# no shebang line, now what?
-	if [ -x "$script_name" ]; then
-	    env="exec"
-	else
-	    echo "$(basename $script_name): No shebang found and not executable." >&2
-	    filename=$(basename "$script_name")
-	    extension="${filename##*.}"
-	    case $extension in
-		py)
-		    env="python2" ;;
-		sh)
-		    env="bash" ;;
-		*)
-		    echo "no file extension" >&2
-	    esac
-	fi
+	echo "$(basename $script_name): No shebang found." >&2
+	filename=$(basename "$script_name")
+	extension="${filename##*.}"
+	case $extension in
+	    py)
+		env="python2" ;;
+	    sh)
+		env="bash" ;;
+	    *)
+		echo "no file extension" >&2
+	esac
     fi
 else
     if [ -x "$script_name" ]; then
 	env="exec"
+    else
+	echo "$script_name: not executable" >&2
     fi
 fi
 
@@ -47,7 +45,7 @@ case $env in
     'python3')
 	echo "/usr/bin/env python3 $script_name $args" ;;
     'bash')
-	echo "/usr/bin/bash $script_name $args" ;;
+	echo "/usr/bin/env bash $script_name $args" ;;
     'exec')
 	shift 1
 	echo $script_name "$args" ;;

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 path="$1"
 duedate="$2"
@@ -6,13 +6,24 @@ branchname="$3"
 
 userpath="$path"
 if [ -d "$userpath" ]; then
-    pushd .
+    pushd . >/dev/null
     cd $userpath
-    mkdir -p doc
+    pwd
     git checkout master 2>/dev/null
-    ontime-commit "$duedate" 2>doc/ontime.error | gitbranchat "$branchname" 2>> doc/branch.error
-    if [ $(wc -c <doc/ontime.error) -gt 0 ]; then
-	echo "HEAD" | gitbranchat "$branchname" 2>> doc/branch.error
+    echo "checking out branch $branchname due at $duedate"
+    if ( git branch | grep "$branchname" ); then
+	git branch -D "$branchname" &>/dev/null
+	#git checkout "$branchname" &>/dev/null
+	#exit 0
     fi
-    popd
+    mkdir -p dkm_review
+    rm -f dkm_review/branch.error
+    ontime-commit "$duedate" 2>dkm_review/ontime.error | gitbranchat "$branchname" >/dev/null 2> >(grep -v "Already on " >> dkm_review/branch.error)
+    if [ $(wc -c <dkm_review/ontime.error) -gt 0 ]; then
+	echo "no ontime commit, checking out HEAD"
+	echo "HEAD" | gitbranchat "$branchname" 2>> dkm_review/branch.error
+    fi
+    popd >/dev/null
+else
+    echo "$userpath: no such directory" >&2
 fi

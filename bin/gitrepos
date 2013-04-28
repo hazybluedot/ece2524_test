@@ -4,17 +4,17 @@ while read gitpath; do
     git_url=`echo $gitpath | cut -d ' ' -f 1`
     git_dir=`echo $gitpath | cut -d ' ' -f 2`
     
-    if git clone $git_url $git_dir 2>/tmp/$$_gitrepos.err; then
+    if git clone $git_url $git_dir >/tmp/$$_gitrepos.stdout 2>/tmp/$$_gitrepos.err; then
 	echo $git_dir
     elif [ -d $git_dir ]; then
 	cd $git_dir
 	git checkout master 2>/dev/null
-	git pull >&2
+	git pull >/dev/null >&2
 	echo $git_dir
     else
 	paste <(echo $git_url) /tmp/$$_gitrepos.err >&2
     fi
-    rm -f /tmp/$$_gitrepos.err
+    rm -f /tmp/$$_gitrepos.{stdout,err}
 
     continue
     pushd $(realpath ".")
