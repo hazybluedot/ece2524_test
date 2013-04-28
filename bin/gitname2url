@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# cd $GITOLITE_ADMIN_DIR
+
+if [ -z "$1" ]; then
+    echo "Usage: $(basename $0) PATH" >&2
+    exit 1
+else
+    BASENAME="$1"
+fi
+
+if [ -n "$2" ]; then
+    DESTBASE="$2"
+fi
+
+while read GITNAME; do
+    REPO_DIR=$(echo $BASENAME | sed s/CREATOR/$GITNAME/g)
+    REPO_PATH="ece2524git@ece2524.ece.vt.edu:$REPO_DIR"
+    if [ -n "$DESTBASE" ]; then
+	REPO_DIR=$(echo $DESTBASE | sed s/CREATOR/$GITNAME/g)
+    fi
+    echo "$REPO_PATH $REPO_DIR"
+done

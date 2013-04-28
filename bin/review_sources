@@ -1,0 +1,29 @@
+#!/bin/bash
+
+## review sources
+server_name="$1"; shift
+if [ -z "$server_name" ]; then
+    echo "Usage: $(basename $0) EMACS_SERVER_FILE FILES"
+    exit 1
+fi
+
+review_files="$@"
+
+while read userdir; do
+    pushd .
+    cd $userdir
+    echo "review: $userdir" >&2
+    for file in $review_files; do
+	if [ -r "$file" ]; then
+	    emacsclient --server-file="$server_name" -n "$file"
+	fi
+    done
+    if [ -r "doc/diff.out" ]; then
+	emacsclient --server-file="$server_name" "doc/diff.out"
+    fi
+    #for file in $review_files; do
+    #emacsclient --server-file="$server_name" -e '(save-buffer "'$file'")'
+    #emacsclient --server-file="$server_name" -e '(kill-buffer "'$file'")'
+    #done
+    popd
+done
