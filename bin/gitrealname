@@ -1,0 +1,8 @@
+#!/bin/bash
+
+gituser="$1"
+userfile="$2"
+roster="$3"
+
+pid=$(grep -E "\b$gituser\b" "$userfile" | cut -d ' ' -f 1)
+echo "$(grep "$pid" $roster | cut -d '"' -f 2) ($gituser,$pid)"

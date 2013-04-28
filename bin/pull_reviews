@@ -1,0 +1,10 @@
+#!/bin/sh
+
+branch="$1"
+date="$2"
+
+git checkout master >/dev/null 2>/dev/null
+git pull origin master
+branch-exists "$branch" && git branch -D "$branch"
+git checkout -b "$branch"
+git pull origin "$branch"
