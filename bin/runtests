@@ -1,0 +1,19 @@
+testbin="$1"
+
+if [ ! -x "$testbin" ]; then
+    echo "Usage: $(basename $0) TESTBIN [ARGS]" >&2
+    exit 1
+fi
+
+testbin=$(realpath "$testbin")
+shift
+args="$@"
+
+while read userpath; do
+    if [ -d "$userpath" ]; then
+	pushd .
+	cd $userpath
+	$testbin $args
+	popd
+    fi
+done

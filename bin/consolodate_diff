@@ -1,0 +1,18 @@
+#!/bin/bash
+
+while read userdir; do
+    pushd .
+    cd $userdir
+    mkdir -p doc
+    echo "Diff report" > doc/diff.out
+    for diff_file in diffs/*.diff; do
+	if [ "$(wc -c < "$diff_file")" -gt "0" ]; then
+	    echo -e "%%\n$(basename "$diff_file"):" >> doc/diff.out
+	    cat "$diff_file" >> doc/diff.out
+	    echo "%%" >> doc/diff.out
+	else
+	    echo "$(basename "$diff_file"): PASS" >> doc/diff.out
+	fi
+    done
+    popd
+done

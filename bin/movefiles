@@ -1,0 +1,14 @@
+#!/bin/bash
+dest="$1"
+if [ -d $dest ]; then
+    while read file; do
+	if [ -r "$file" ]; then
+	    if [ -n "$2" ]; then
+		destfile=${dest}/$( basename $file | sed 's/'$2'//' )
+	    else
+		destfile=${dest}/$( basename $file )
+	    fi
+	    mv $file $destfile
+	fi
+    done
+fi

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+## remove duplicate lines from a list of files
+
+while read userdir; do
+    pushd .
+    cd $userdir
+    mkdir -p doc
+    for file in doc/*; do
+	tmpfile=/tmp/"$$"_$(echo "$file" | sed 's|/|_|g').tmp
+	uniq "$file" > $tmpfile
+	mv $tmpfile $file
+    done
+    popd
+done

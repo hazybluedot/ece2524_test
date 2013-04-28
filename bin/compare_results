@@ -1,0 +1,26 @@
+#!/bin/bash
+
+refpath="$1"
+
+if [ ! -d "$refpath/output" ]; then
+    echo "Usage: $(basename $0) REFPATH" >&2
+    exit 1
+fi
+
+while read userdir; do
+    pushd .
+    cd $userdir
+    mkdir -p diffs
+    rm -f diffs/*
+    if [ -d 'output' ]; then
+	for diff_file in "$refpath/output/"*; do
+	    local_output="./output/$(basename $diff_file)"
+	    if [ -r "$local_output" ]; then
+		diff "$local_output" "$diff_file" > diffs/$(basename "$diff_file").diff
+	    fi
+	done
+    else
+	echo "$userdir: No output directory, have you run tests?" >&2
+    fi
+    popd
+done

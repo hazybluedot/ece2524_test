@@ -1,0 +1,65 @@
+filename="$1"
+if [ ! -r "$1" ]; then
+   echo "Usage: $(basename $0) FILE" >&2
+   exit 1
+fi
+
+script_name="$1"; shift
+args="$@"
+
+if ( file -i "$script_name" | grep -E 'text/\w+' &>/dev/null ) ; then
+    shebang=$(head -n 1 "$script_name" | grep '^#!')
+    if [ ! -z "$shebang" ]; then
+	if ( echo "$shebang" | grep 'python3' >/dev/null ); then
+	    env="python3"
+	elif ( echo "$shebang" | grep -E 'python2?' >/dev/null ); then
+	    env="python2"
+	else
+	    env="shebang"
+	fi
+    else
+	# no shebang line, now what?
+	echo "$(basename $script_name): No shebang found." >&2
+	filename=$(basename "$script_name")
+	extension="${filename##*.}"
+	case $extension in
+	    py)
+		env="python2" ;;
+	    sh)
+		env="bash" ;;
+	    *)
+		echo "no file extension" >&2
+	esac
+    fi
+else
+    if [ -x "$script_name" ]; then
+	env="exec"
+    else
+	echo "$script_name: not executable" >&2
+    fi
+fi
+
+case $env in
+    'python2')
+	echo "/usr/bin/env python2 $script_name $args" ;;
+    'python3')
+	echo "/usr/bin/env python3 $script_name $args" ;;
+    'bash')
+	echo "/usr/bin/env bash $script_name $args" ;;
+    'exec')
+	shift 1
+	echo $script_name "$args" ;;
+    'shebang')
+	shift 1
+	if [ -x "$script_name" ]; then
+	    echo $script_name "$args" 
+	else
+	    echo "$(basename $script_name): not executable" >&2
+	    echo -n $shebang | sed -re 's/^#!//' 
+	    echo " $script_name" $args
+	fi
+	;;
+     *)
+	echo "I don't know what to do :-(" >&2
+	exit 1
+esac
