@@ -1,6 +1,11 @@
 #!/bin/bash
 
 branch="$1"
+git checkout "$branch"
+if [ "$branch" != $(git symbolic-ref --short HEAD) ]; then
+    echo "Branch mismatch: $branch" >&2
+    exit 1
+fi
 
 console="ece252:1.1"
 
@@ -18,6 +23,12 @@ tmux send-keys -t $console "cd $wd; clear" C-m
 echo "getting realname of $gituser"
 runcommand "echo \"$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv)\""
 summary_log="dkm_review/summary"
+
+if [ -r dkm_review/review.ogg ]; then
+    runcommand "echo Found file review.ogg, skipping $branch"
+    exit 0
+fi
+
 case $branch in
     dkm_review_part1)
     	;;
@@ -27,7 +38,7 @@ case $branch in
 	emacsclient --server-file=review $( ifexist 'README' $summary_log 'mult.sh' 'mult.py' 'mult.cc' | xargs )
 	kill %1
 	wait
-	git add dkm_review/review.ogg
+	git add dkm_review/
 	git commit -m "add audio review"
 	;;
     dkm_review_part3)
@@ -37,7 +48,7 @@ case $branch in
 	emacsclient --server-file=review $( ifexist 'README' $summary_log $src_file | xargs )
 	kill %1
 	wait
-	git add dkm_review/review.ogg
+	git add dkm_review/
 	git commit -m "add audio review"
 	;;
     dkm_review_makefile)
