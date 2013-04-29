@@ -66,9 +66,10 @@ part3() {
     local refpath="$1"
     local inputpath="$2"
     gituser=$(echo $(pwd) | sed -r 's|.*assignments/(\w+)/mult|\1|')
-    realname=$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv)
+    realname=$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv | cut -d ' ' -f 1,2)
     group=$(echo $(grep "$realname" $HOME/ece2524/repos/groups | cut -d ':' -f 2))
     git ls-files mult --error-unmatch 2>/dev/null && ( echo "Do not track binary/compiled files with git" > dkm_review/general.errors; git rm mult 2>/dev/null )
+
     if [ -z "$group" ]; then
 	echo "Could not deduce group for $realname ($gituser)" >&2
 	exit 1
