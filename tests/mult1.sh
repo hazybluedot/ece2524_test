@@ -65,8 +65,15 @@ do_cc_tests() {
 part3() {
     local refpath="$1"
     local inputpath="$2"
+    gituser=$(echo $(pwd) | sed -r 's|.*assignments/(\w+)/mult|\1|')
+    realname=$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv)
+    group=$(echo $(grep "$realname" $HOME/ece2524/repos/groups | cut -d ':' -f 2))
     git ls-files mult --error-unmatch 2>/dev/null && ( echo "Do not track binary/compiled files with git" > dkm_review/general.errors; git rm mult 2>/dev/null )
-    case $(ls group[0-9] 2>/dev/null) in
+    if [ -z "$group" ]; then
+	echo "Could not deduce group for $realname ($gituser)" >&2
+	exit 1
+    fi
+    case $group in
 	group1)
 	    do_sh_tests "$refpath" "$inputpath" ;;
 	group2)
@@ -74,7 +81,7 @@ part3() {
 	group3) 
 	    do_cc_tests "$refpath" "$inputpath" ;;
 	*)
-	    echo "No group file found" >> dkm_review/general.errors
+	    echo "$group: invalid group" >> dkm_review/general.errors
     esac
 }
 

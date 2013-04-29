@@ -1,50 +1,44 @@
 #!/bin/bash
 
-passfail() {
-    local stub="$1"
-    echo "$(grep -c 'PASS' dkm_review/${stub}.tests 2>/dev/null) / $(grep -c -E '(PASS|FAIL)' dkm_review/${stub}.tests 2>/dev/null)"
+branch="$1"
+
+console="ece252:1.1"
+
+runcommand() {
+    tmux send-keys -t $console "$@" C-m
 }
 
-summarize() {
-    echo "General:"
-    cat dkm_review/*.testerr | uniq
-    if [ -s "dkm_review/ontime.error" ]; then
-	echo "late: $(cat dkm_review/ontime.error)"
-    fi
-    for file in mult.sh mult.py mult.cc; do
-	if [ ! -r "$file" ]; then
-	    echo "$file: not found"
-	fi
-	if [ -r "dkm_review/${file}.tests" ]; then
-	    percent=$(echo "scale=2; ($(passfail $file))*100" | bc)
-	    echo "$file: passed $(passfail $file) tests (${percent}%)"
-	fi
-    done
-    if grep 'FAIL' dkm_review/mult.*.tests; then
-	echo -e "\nFailed Tests:"
-	while read failed; do
-	    echo -e "\n$failed"
-	    cat dkm_review/diffs/${failed}.diff
-	done < <(grep -h 'FAIL' dkm_review/mult.*.tests | cut -d ':' -f 1)
-    fi
+sendint() {
+    tmux send-keys -t $console C-c
 }
-
-summary_log="dkm_review/summary"
-branch=$(git symbolic-ref --short HEAD)
 
 wd=$(pwd)
-tmux send-keys -t review:1.1 "cd $wd; clear" C-m
-summarize > $summary_log
-
+gituser=$(echo $(pwd) | sed -r 's|.*assignments/(\w+)/mult|\1|')
+tmux send-keys -t $console "cd $wd; clear" C-m
+echo "getting realname of $gituser"
+runcommand "echo \"$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv)\""
+summary_log="dkm_review/summary"
 case $branch in
     dkm_review_part1)
     	;;
     dkm_review_part2)
+	runcommand "echo Recording for $branch..."
+	rec -c 1 dkm_review/review.ogg &
 	emacsclient --server-file=review $( ifexist 'README' $summary_log 'mult.sh' 'mult.py' 'mult.cc' | xargs )
+	kill %1
+	wait
+	git add dkm_review/review.ogg
+	git commit -m "add audio review"
 	;;
     dkm_review_part3)
+	runcommand "echo Recording for $branch..."
+	rec -c 1 dkm_review/review.ogg &
 	src_file=$(grep -E  'mult\.(py|sh|cc): passed' dkm_review/summary | cut -d ':' -f 1)
 	emacsclient --server-file=review $( ifexist 'README' $summary_log $src_file | xargs )
+	kill %1
+	wait
+	git add dkm_review/review.ogg
+	git commit -m "add audio review"
 	;;
     dkm_review_makefile)
 	;;
