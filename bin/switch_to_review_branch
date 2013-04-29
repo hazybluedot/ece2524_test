@@ -12,7 +12,8 @@ if [ -d "$userpath" ]; then
     git checkout master 2>/dev/null
     echo "checking out branch $branchname due at $duedate"
     if ( git branch | grep "$branchname" ); then
-	git branch -D "$branchname" &>/dev/null
+	#git branch -D "$branchname" &>/dev/null
+	git checkout "$branchname" &>/dev/null
     fi
     mkdir -p dkm_review
     rm -f dkm_review/branch.error
