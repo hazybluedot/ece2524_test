@@ -7,7 +7,7 @@ argpostfix() {
 function runsingle() {
     local solution_script="$1"; shift
     local input_file="$1"; shift
-    timeout -k 5 2 $(envrun $solution_script $@ 2>&4) < $input_file
+    timeout -k 5 3 $(envrun $solution_script 2>&4) $@ < $input_file
     local status="$?"
     echo "$status" >&3
     if [ "$status" -eq 124 ]; then
@@ -52,7 +52,7 @@ singlediff() {
 	    #echo "diffing $(basename $ref_file) with $(basename $test_file) to $diff_file"
 	    echo -n $(basename $test_file | sed "s/progtest_$$_//" )": "
 	    diff -c $ref_file $test_file > $diff_file
-	    if fail_stderr_linecount "$ext" "$ref_file" "$diff_file"; then
+	    if fail_stderr_linecount "$ext" "$ref_file" "$test_file" "$diff_file"; then
 		echo "FAIL"
 		echo "$diff_file" >&2
 	    else
