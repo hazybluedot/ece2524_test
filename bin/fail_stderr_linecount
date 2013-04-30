@@ -1,10 +1,13 @@
+#!/bin/bash
+
 ext="$1"
 ref_file="$2"
-diff_file="$3"
+test_file="$3"
+diff_file="$4"
 
 case $ext in
     stderr )
-	test $(wc -l $diff_file) -eq $(wc -l $ref_file) ;;    
+	test $(wc -l <$test_file) -ne $(wc -l <$ref_file); exit $? ;;    
     * )
-     	test -s "$diff_file" ;;
+     	test -s "$diff_file"; exit $? ;;
 esac

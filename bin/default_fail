@@ -1,5 +1,6 @@
 ext="$1"
 ref_file="$2"
-diff_file="$3"
+test_file="$3"
+diff_file="$4"
 
 test -s "$diff_file"
