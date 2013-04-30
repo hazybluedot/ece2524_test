@@ -5,7 +5,7 @@ branch="$1"
 date="$2"
 
 echo "checking out commit no later than $date to $branch"
-switch_to_review_branch "$(realpath ".")" "$date" "$branch"
+switch_to_review_branch "$date" "$branch"
 
 if [ "$branch" != $(git symbolic-ref --short HEAD) ]; then
     echo "Branch mismatch: $branch" >&2
@@ -25,8 +25,8 @@ require() {
 
 compile() {
     local l="$1"
-    g++ -Wall -g -c mult.cc >dkm_review/mult.cc.g++.stdout 2>dkm_review/mult.cc.g++.stderr
-    g++ -Wall -g -o mult mult.o $l >>dkm_review/mult.cc.g++.stdout 2>>dkm_review/mult.cc.g++.stderr
+    g++ -Wall -std=c++11 -g -c mult.cc >dkm_review/mult.cc.g++.stdout 2>dkm_review/mult.cc.g++.stderr
+    g++ -Wall -std=c++11 -g -o mult mult.o $l >>dkm_review/mult.cc.g++.stdout 2>>dkm_review/mult.cc.g++.stderr
 }
 
 dotests() {
@@ -66,7 +66,7 @@ part3() {
     local refpath="$1"
     local inputpath="$2"
     gituser=$(echo $(pwd) | sed -r 's|.*assignments/(\w+)/mult|\1|')
-    realname=$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv)
+    realname=$(gitrealname $gituser $HOME/ece2524/repos/gitusers $HOME/ece2524/current/roster.csv | cut -d '(' -f 1)
     group=$(echo $(grep "$realname" $HOME/ece2524/repos/groups | cut -d ':' -f 2))
     git ls-files mult --error-unmatch 2>/dev/null && ( echo "Do not track binary/compiled files with git" > dkm_review/general.errors; git rm mult 2>/dev/null )
     if [ -z "$group" ]; then
