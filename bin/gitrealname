@@ -1,8 +1,19 @@
 #!/bin/bash
 
 gituser="$1"
-userfile="$2"
-roster="$3"
+
+if [ -z "$2" ]; then
+    userfile="$HOME/ece2524/repos/gitusers"
+else
+    userfile="$2"
+fi
+
+if [ -z "$3" ]; then
+    roster="$HOME/ece2524/current/roster.csv"
+else
+    roster="$3"
+fi
+
 
 pid=$(grep -E "\b$gituser\b" "$userfile" | cut -d ' ' -f 1)
 echo "$(grep "$pid" $roster | cut -d '"' -f 2) ($gituser,$pid)"
